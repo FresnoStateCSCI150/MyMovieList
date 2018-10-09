@@ -13,4 +13,13 @@
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
+
+Route::get('about','PageController@about');
+
+Route::get('login', 'PageController@login');
+
+Route::get('register', 'PageController@register');
+
+Route::get('discussion', 'PostsController@index');
+Route::get('discussion/{post}', 'PostsController@show');
