@@ -4,7 +4,7 @@
       <a class="navbar-brand" href="#">My Movie List</a>
     </div>
     <ul class="nav nav-tabs navbar-left">
-      <li class="active"><a href="#">Home</a></li>
+      <li class="active"><a href="/">Home</a></li>
       <li><a href="/login">Login</a></li>
       <li> <a href="/about">About</a></li>
       <li><a href="/discussion">Discussions</a></li>
