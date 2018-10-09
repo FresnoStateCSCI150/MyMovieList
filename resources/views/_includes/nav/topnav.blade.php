@@ -1,7 +1,7 @@
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">My Movie List</a>
+      <a class="navbar-brand" href="/">My Movie List</a>
     </div>
     <ul class="nav nav-tabs navbar-left">
       <li class="active"><a href="/">Home</a></li>
