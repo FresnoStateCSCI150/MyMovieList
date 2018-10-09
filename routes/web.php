@@ -14,3 +14,26 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('about', function() {
+    
+    // about page
+
+	return view('about');
+});
+
+Route::get('login', function() {
+    
+    // login page
+
+	return view('login');
+});
+
+Route::get('register', function() {
+    
+    // register page
+
+	return view('register');
+});
+
+Route::get('discussion', 'PostsController@index');
