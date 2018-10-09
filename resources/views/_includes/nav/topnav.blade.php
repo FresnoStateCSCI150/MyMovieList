@@ -3,7 +3,7 @@
     <div class="navbar-header">
       <a class="navbar-brand" href="#">My Movie List</a>
     </div>
-    <ul class="nav navbar-nav">
+    <ul class="nav nav-tabs navbar-left">
       <li class="active"><a href="#">Home</a></li>
       <li><a href="/login">Login</a></li>
       <li><a href="/register">Register</a></li>
