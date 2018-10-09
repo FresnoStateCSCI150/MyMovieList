@@ -1,7 +1,5 @@
 @extends ('layouts/master')
 
 @section ('content')
-
-	<h1>Please register.</h1>
-
+	<h1>A place to show that specific post.</h1>
 @endsection

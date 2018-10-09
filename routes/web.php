@@ -37,3 +37,4 @@ Route::get('register', function() {
 });
 
 Route::get('discussion', 'PostsController@index');
+Route::get('discussion/{post}', 'PostsController@show');
