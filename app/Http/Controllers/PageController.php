@@ -23,4 +23,9 @@ class PageController extends Controller
 	{
 		return view('register');
 	}
+
+	public function forgot()
+	{
+		return view('forgot');
+	}
 }

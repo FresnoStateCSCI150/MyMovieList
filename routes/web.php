@@ -18,8 +18,9 @@ Route::get('/', function () {
 Route::get('about','PageController@about');
 
 Route::get('login', 'PageController@login');
-
 Route::get('register', 'PageController@register');
+Route::get('forgot', 'PageController@forgot');
 
 Route::get('discussion', 'PostsController@index');
 Route::get('discussion/{post}', 'PostsController@show');
+Route::get('discussion/create', 'PostsController@create');
