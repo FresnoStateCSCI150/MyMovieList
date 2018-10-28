@@ -17,7 +17,7 @@
     	@include('_includes/nav/topnav')
 
 
-    	@yield('content');
+    	@yield('content')
 
     	<!-- Scripts -->
 		<script src="{{ asset('js/app.js') }}"></script>

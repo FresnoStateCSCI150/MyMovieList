@@ -23,3 +23,5 @@ Route::get('register', 'PageController@register');
 
 Route::get('discussion', 'PostsController@index');
 Route::get('discussion/{post}', 'PostsController@show');
+
+Route::get('friends', 'PageController@friends');
