@@ -27,11 +27,9 @@
                         
 					</div>
 				</div>
+				<div id="appendSearch"></div>
 			</div>
 		</div>
-	</div>
-	<div id="appendSearch" class="container">
-
 	</div>
 </main>
 
@@ -45,19 +43,13 @@
 			var obj = data['results'];
 			console.log(obj);
 			for (var i = 0; i < obj.length; i++) {
-				$.each(obj[i], function(key, value) {
-					if( key == "title") {
-						$("#appendSearch").append("<p>" + value + "</p>");
-					}
-					if (key == "overview" || key == "poster_path") {
-						if (key == "overview") {
-							$("#appendSearch").append("<p>Description: " + value + "</p>");
-						} else {
-							var stringUrl = "http://image.tmdb.org/t/p/w200" + value;
-							$("#appendSearch").append("<img src=\"" + stringUrl + "\" alt=\"movie poster\">");
-						}
-					}
-				});
+				var makeCard ="<div class=\"card\">";
+				var currentMovie = obj[i];
+				var movieTitle = "<div class=\"card-header\">" + currentMovie['title'] + "</div><div class=\"card-body\"><div class=\"container\"><div class=\"row\">";
+				var posterUrl = "http://image.tmdb.org/t/p/w200" + currentMovie['poster_path'];
+				var posterImage = "<div class=\"col-sm-6 col-md-6 col-xs-12 image-container\"><img src=\"" + posterUrl + "\" alt=\"movie poster\"></div>";
+				var description =  "<div class=\"col-sm-6 col-md-6 col-xs-12\"><p class=\"card-text\"> " + currentMovie['overview'] + "</p></div>";
+				$("#appendSearch").append(makeCard + movieTitle + posterImage + description + "</div>");
 			}
 		});
 	});
