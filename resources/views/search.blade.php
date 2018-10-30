@@ -37,6 +37,7 @@
 
 <script type="text/javascript">
 	$('#searchButton').click(function() {
+		$("#appendSearch").empty();
 		var searchMovie = $('#search').val();
 		var requestString = "https://api.themoviedb.org/3/search/movie?api_key=547accc678865c1518f69b9f47e2d0a7&language=en-US&query=" + searchMovie + "&page=1";
 		$.get(requestString, function(data) {
