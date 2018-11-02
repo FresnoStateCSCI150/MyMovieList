@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 class PageController extends Controller
 {
-	public function welcome()
+	public function home()
 	{
-		return view('welcome');
+		return view('home');
 	}
 	
 	public function about()
@@ -14,13 +14,8 @@ class PageController extends Controller
 		return view('about');
 	}
 
-	public function login()
+	public function forgot()
 	{
-		return view('login');
-	}
-
-	public function register()
-	{
-		return view('register');
+		return view('forgot');
 	}
 }
