@@ -12,14 +12,23 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 })->name('home');
 
 Route::get('about','PageController@about');
 
-Route::get('login', 'PageController@login');
-Route::get('register', 'PageController@register');
-Route::get('forgot', 'PageController@forgot');
+// Register
+Route::get('register', 'RegistrationController@create'); // send to register page
+Route::post('register', 'RegistrationController@store'); // store user info
+
+// Login
+Route::get('login', 'SessionsController@create'); // send to login page
+Route::post('login', 'SessionsController@store'); // store user info
+Route::get('logout', 'SessionsController@destroy'); // logout user
+
+/*Route::get('forgot', 'PageController@forgot'); */
+
+
 
 Route::get('discussion', 'PostsController@index');
 Route::get('discussion/{post}', 'PostsController@show');
