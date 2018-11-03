@@ -16,9 +16,10 @@
 
     	@include('_includes/nav/topnav')
 
-
-    	@yield('content')
-
+        <div class="li">
+            @yield('content')
+        </div>
+    	
     	<!-- Scripts -->
 		<script src="{{ asset('js/app.js') }}"></script>
     </body>

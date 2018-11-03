@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller
 {
-	public function welcome()
+	public function home()
 	{
-		return view('welcome');
+		return view('home');
 	}
 	
 	public function about()
@@ -16,14 +16,9 @@ class PageController extends Controller
 		return view('about');
 	}
 
-	public function login()
+	public function forgot()
 	{
-		return view('login');
-	}
-
-	public function register()
-	{
-		return view('register');
+		return view('forgot');
 	}
 
 	/* For now to see a friends list you have to manually populate the users and user_friend tables 
