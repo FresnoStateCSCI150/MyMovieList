@@ -8,25 +8,30 @@
         <title>My Movie List</title>
 
         <!-- Fonts -->
-		<!-- Styles -->
-		<link href="{{ asset('css/app.css') }}" rel="stylesheet">
-		<link href="{{ asset('css/custom.css') }}" rel="stylesheet">
         <!-- Styles -->
-
-        <!--JQuery -->
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+        <!-- Styles -->
+        <style type="text/css">
+            .nav-tabs {
+                border-bottom: none;
+            }
+        </style>
+        <!-- JQuery -->
         <script
-              src="https://code.jquery.com/jquery-3.3.1.min.js"
-              integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-              crossorigin="anonymous"></script>
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
     </head>
     <body>
 
-    	@include('_includes/nav/topnav')
+        @include('_includes/nav/topnav')
 
-
-    	@yield('content');
-
-    	<!-- Scripts -->
-		<script src="{{ asset('js/app.js') }}"></script>
+        <div class="li">
+            @yield('content')
+        </div>
+        
+        <!-- Scripts -->
+        <script src="{{ asset('js/app.js') }}"></script>
     </body>
 </html>
