@@ -18,11 +18,11 @@ Route::get('/', function () {
 Route::get('about','PageController@about');
 
 // Register
-Route::get('register', 'RegistrationController@create'); // send to register page
+Route::get('register', 'RegistrationController@create')->name('register'); // send to register page
 Route::post('register', 'RegistrationController@store'); // store user info
 
 // Login
-Route::get('login', 'SessionsController@create'); // send to login page
+Route::get('login', 'SessionsController@create')->name('login'); // send to login page
 Route::post('login', 'SessionsController@store'); // store user info
 Route::get('logout', 'SessionsController@destroy'); // logout user
 
@@ -35,4 +35,4 @@ Route::get('discussion/{post}', 'PostsController@show');
 Route::get('discussion/create', 'PostsController@create');
 
 
-Route::get('friends', 'PageController@friends');
+Route::get('friends', 'FriendsController@friends')->middleware('auth');
