@@ -24,7 +24,7 @@ Route::get('logout', 'SessionsController@destroy'); // logout user
 Route::get('discussion', 'PostsController@index');
 Route::get('discussion/{post}', 'PostsController@show');
 Route::get('discussion/create', 'PostsController@create');
-// Search
+// Search get and post methods
 Route::get('search', 'PageController@search');
 Route::post('TMBD', 'PageController@getTMDBjson');
-Route::get('test', 'PageController@getTest');
+
