@@ -35,4 +35,8 @@ Route::get('discussion/{post}', 'PostsController@show');
 Route::get('discussion/create', 'PostsController@create');
 
 
-Route::get('friends', 'FriendsController@friends')->middleware('auth');
+Route::get('friends', 'FriendsController@friends')->middleware('auth')->name('friends');
+Route::post('friends/request', 'FriendsController@createFriendRequest')->middleware('auth');
+Route::post('friends/create', 'FriendsController@createFriendship');
+Route::post('friends/decline', 'FriendsController@declineFriendship');
+Route::post('friends/delete', 'FriendsController@deleteFriendship');

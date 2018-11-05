@@ -32,4 +32,14 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\User', 'user_friend', 'user_id', 'friend_id');
     }
+
+    public function friendRequestsReceived()
+    {
+        return $this->belongsToMany('App\User', 'friend_requests', 'receiver_id', 'sender_id');
+    }
+
+    public function friendRequestsSent()
+    {
+        return $this->belongsToMany('App\User', 'friend_requests', 'sender_id', 'receiver_id');
+    }
 }
