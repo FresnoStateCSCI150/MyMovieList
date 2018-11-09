@@ -13,18 +13,16 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 Route::get('about','PageController@about');
-// Register
-Route::get('register', 'RegistrationController@create'); // send to register page
-Route::post('register', 'RegistrationController@store'); // store user info
-// Login
-Route::get('login', 'SessionsController@create'); // send to login page
-Route::post('login', 'SessionsController@store'); // store user info
-Route::get('logout', 'SessionsController@destroy'); // logout user
-/*Route::get('forgot', 'PageController@forgot'); */
 Route::get('discussion', 'PostsController@index');
 Route::get('discussion/{post}', 'PostsController@show');
 Route::get('discussion/create', 'PostsController@create');
+Route::get('account','PageController@account');
+
 // Search get and post methods
 Route::get('search', 'PageController@search');
 Route::post('TMBD', 'PageController@getTMDBjson');
 
+// Login and Register
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
