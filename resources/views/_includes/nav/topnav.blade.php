@@ -10,6 +10,7 @@
     <ul class="nav nav-tabs navbar-left">
       <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
       <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+      <li class="nav-item"><a class="nav-link" href="/friends">Friends</a></li>
       <li class="nav-item"><a class="nav-link" href="/discussion">Discussions</a></li>
       <li class="nav-item"><a class="nav-link" href="https://github.com/FresnoStateCSCI150/MyMovieList">GitHub</a></li>
     </ul>
