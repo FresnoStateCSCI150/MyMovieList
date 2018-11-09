@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>My Movie List</title>
@@ -15,6 +16,22 @@
         <style type="text/css">
             .nav-tabs {
                 border-bottom: none;
+            }
+            x-star-rating {
+                font-family: 'Ionicons';
+                font-size: 30px;
+                display: inline-flex;
+                cursor: pointer;
+            }
+
+            x-star-rating > .star::after {
+                content: '\f3ae';
+                color: #777;
+            }
+
+            x-star-rating > .star.full::after {
+                content: '\f2fc';
+                color: #fd0;
             }
         </style>
         <!-- JQuery -->

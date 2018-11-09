@@ -27,7 +27,7 @@ class PageController extends Controller
 
 	public function getTMDBjson(Request $request) {
 		$searchString = $request->input('data');
-		$reqString = "https://api.themoviedb.org/3/search/movie?api_key=".env("TMD_API_KEY","")."&language=en-US&query=". $searchString."&page=1";
+		$reqString = "https://api.themoviedb.org/3/search/movie?api_key=".env("TMD_API_KEY","")."&language=en-US&query=".$searchString."&page=1";
 		$json = json_decode(file_get_contents($reqString));
 		return response()->json([
 			'success' => $json
