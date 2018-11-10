@@ -17,9 +17,9 @@ class PageController extends Controller
 		return view('about');
 	}
 
-	public function forgot()
+	public function account()
 	{
-		return view('forgot');
+		return view('account');
 	}
 
 	public function search()

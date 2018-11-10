@@ -6,10 +6,10 @@
         @if (Route::has('login'))
             <div class="top-right links">
                 @auth
-                    <a href="{{ url('/home') }}">Home</a>
+                    <h1>Welcome, {{ Auth::user()->name }}!</h1>
                 @else
-                    <a href="{{ route('login') }}">Login</a>
-                    <a href="{{ route('register') }}">Register</a>
+                    <h1>Welcome, to MyMovieList!</h1>
+                    <h2>Please register or login!</h2>
                 @endauth
             </div>
         @endif
