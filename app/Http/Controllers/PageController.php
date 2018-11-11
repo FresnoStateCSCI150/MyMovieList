@@ -35,4 +35,23 @@ class PageController extends Controller
 			'success' => $json
 		]);
 	}
+
+	public function saveMovieReview(Request $request) {
+
+		//Models
+		$MovDat = Movie_Data();
+		$Review = Movie_Review();
+
+		$MovDat->tmdb_id = undefined;
+		$MovDat->tmdb_score = undefined;
+		$MovDat->title = undefined;
+		$MovDat->img_path = undefined;
+		$MovDat->release = undefined;
+		$MovDat->description = undefined;
+
+		$Review->user_id = undefined; 
+		$Review->tmdb_id = undefined;
+		$Review->user_score = undefined;
+		$Review->review = undefined;
+	}
 }

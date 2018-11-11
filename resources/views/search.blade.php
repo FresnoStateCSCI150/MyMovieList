@@ -34,7 +34,7 @@
 
 
 <script type="text/javascript">
-
+	var JsonStrings = [];
 	$('#searchButton').click(function() {
 		searchQuery();
 	});
@@ -68,7 +68,7 @@
 
 		
 	function showSearchResults(obj) {
-
+		JsonStrings = [];
 		for (var i = 0; i < obj.length; i++) {
 			$("#appendSearch").append("<hr />");
 			var makeCard ="<div class=\"card\">";
@@ -80,7 +80,16 @@
 			var buttonAdd = "<div id=\"theButtons" + currentMovie['id'] +"\"></div></div>";
 
 			$('#appendSearch').append(makeCard + movieTitle + posterImage + description + buttonAdd + "</div></div></div>");
-				visbleAddMovieButton(true, currentMovie['id']);
+
+			var data = {
+				'title': currentMovie['title'],
+				'tmdb_id':currentMovie['id'],
+				'poster': currentMovie['poster_path'],
+				'release': currentMovie['release_date'],
+				'tmdb_score': currentMovie['vote_average']
+			}
+			JsonStrings[i] = data;
+			visbleAddMovieButton(true, currentMovie['id']);
 		}
 	}	
 
@@ -88,7 +97,7 @@
 		$("#theButtons"+ id).empty();
 		var buttonText = "";
 		if (on) {
-			buttonText = "<button onclick=\"appendForm(" + id + ")\" class=\"btn btn-primary\">Add Movie</button>";
+			buttonText = "<button onclick=\"appendForm(" + id +")\" class=\"btn btn-primary\">Add Movie</button>";
 			$("#theButtons"+id).append(buttonText);
 		} else {
 			buttonText = "<button onclick=\"cancelReview(" + id + ")\" class=\"btn btn-danger\">Cancel</button><button onclick=\"confirmReview(" + id + ")\" class=\"btn btn-primary\">Submit Review</button>";
@@ -97,7 +106,7 @@
 	}
 
 	function appendForm(id) {
-		var movieReviewText = "<x-star-rating value=\"5\" number=\"10\"></x-star-rating><div class=\"form-group\"><label for=\"review\">Your Review:</label><textarea class=\"form-control\" id=\"exampleFormControlTextarea1\" rows=\"3\"></textarea></div>";
+		var movieReviewText = "<x-star-rating id=\"starRating"+id+"\" value=\"5\" number=\"10\"></x-star-rating><div class=\"form-group\"><label for=\"review\">Your Review:</label><textarea class=\"form-control\" id=\"review"+id+"\" rows=\"3\"></textarea></div>";
 		$('#div' + id).append(movieReviewText);
 		visbleAddMovieButton(false, id);
 	}
@@ -109,7 +118,13 @@
 
 	/*Implement later: Submit Review */
 	function confirmReview(id){
-		console.log(id);
+		var data;
+		for (var i = 0; i < JsonStrings.length; i++) {
+			if(JsonStrings[i]['tmdb_id'] == id) {
+				data = JsonStrings[i];
+			}
+		}
+		console.log(data);
 	}
 
 class StarRating extends HTMLElement {
