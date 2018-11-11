@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Auth;
+use App\Movie_Data;
+use App\Movie_Review;
 
 class PageController extends Controller
 {
@@ -38,20 +40,51 @@ class PageController extends Controller
 
 	public function saveMovieReview(Request $request) {
 
+		$validatedData = $request->validate([
+        	'user_id' => 'required|unique:posts'
+    	]);
+
 		//Models
-		$MovDat = Movie_Data();
 		$Review = Movie_Review();
 
-		$MovDat->tmdb_id = undefined;
-		$MovDat->tmdb_score = undefined;
-		$MovDat->title = undefined;
-		$MovDat->img_path = undefined;
-		$MovDat->release = undefined;
-		$MovDat->description = undefined;
+		$Review->user_id = $request->user_id; 
+		$Review->tmdb_id = $request->tmdb_id;
+		$Review->user_score = $request->user_score;
+		$Review->review = $request->user_review;
 
-		$Review->user_id = undefined; 
-		$Review->tmdb_id = undefined;
-		$Review->user_score = undefined;
-		$Review->review = undefined;
+		//If successful return sucess!
+		if($Review->save()) {
+			return response()->json([
+				'success' => 'success'
+			]);
+		}
+	}
+
+	public function saveMovieData(Request $request){
+		
+		$this->validate($request, [
+			'tmdb_id' => 'required|unique:movie_data'
+		]);
+		try {        
+			//process data and submit
+			$MovDat = new Movie_Data;
+			$MovDat->tmdb_id = $request->input('tmdb_id');
+			$MovDat->tmdb_score = $request->input('tmdb_score');
+			$MovDat->title = $request->input('title');
+			$MovDat->img_path = $request->input('img_path');
+			$MovDat->release = $request->input('release');
+			$MovDat->description = $request->input('description');
+			//If successful return sucess!
+			$MovDat->save();
+			return response()->json([
+				'all' => $MovDat,
+			]);
+
+		} 
+		catch(\Exception $e) {
+				return response()->json([
+				'err' => $e->getMessage(),
+			]);
+		}
 	}
 }

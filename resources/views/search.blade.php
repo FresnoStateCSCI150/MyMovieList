@@ -35,6 +35,7 @@
 
 <script type="text/javascript">
 	var JsonStrings = [];
+	var user = {{ Auth::user()->id }};
 	$('#searchButton').click(function() {
 		searchQuery();
 	});
@@ -86,7 +87,8 @@
 				'tmdb_id':currentMovie['id'],
 				'poster': currentMovie['poster_path'],
 				'release': currentMovie['release_date'],
-				'tmdb_score': currentMovie['vote_average']
+				'tmdb_score': currentMovie['vote_average'],
+				'description': currentMovie['overview']
 			}
 			JsonStrings[i] = data;
 			visbleAddMovieButton(true, currentMovie['id']);
@@ -118,13 +120,40 @@
 
 	/*Implement later: Submit Review */
 	function confirmReview(id){
-		var data;
+		var moviedata;
 		for (var i = 0; i < JsonStrings.length; i++) {
 			if(JsonStrings[i]['tmdb_id'] == id) {
-				data = JsonStrings[i];
+				moviedata = JsonStrings[i];
 			}
 		}
-		console.log(data);
+
+		var movdata = {
+			'title': moviedata['title'],
+			'tmdb_id':moviedata['tmdb_id'],
+			'img_path': moviedata['poster'],
+			'release': moviedata['release'],
+			'tmdb_score': moviedata['tmdb_score'],
+			'description': moviedata['description'],
+		}
+
+		var movRevData = {
+			'user_id': user,
+			'tmdb_id':moviedata['tmdb_id'],
+			'user_score': $('#starRating'+id).val(),
+			'user_review': $('#review'+id).val()
+		}
+
+		console.log(movRevData);
+		console.log(movdata);
+
+		$.ajax({
+			type: 'POST',
+			url: '/TMBDdat',
+			data: movdata,
+			success: function (data) { 
+					obj = data; console.log(obj);},
+			error: function() { console.log('error');}
+		});
 	}
 
 class StarRating extends HTMLElement {
