@@ -24,7 +24,6 @@
                                 </button>
                             </div>
                         </div>
-                        
 					</div>
 				</div>
 				<div id="appendSearch"></div>
@@ -38,6 +37,12 @@
 
 	$('#searchButton').click(function() {
 		searchQuery();
+	});
+
+	$(".form-group").on('keyup', function (e) {
+    	if (e.keyCode == 13) {
+       		searchQuery();
+    	}
 	});
 
 	function searchQuery() {
