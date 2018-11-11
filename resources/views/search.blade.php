@@ -143,9 +143,14 @@
 			'user_review': $('#review'+id).val()
 		}
 
-		console.log(movRevData);
-		console.log(movdata);
-
+		$.ajax({
+			type: 'POST',
+			url: '/MovieReview',
+			data: movRevData,
+			success: function (data) { 
+					obj = data; console.log(obj);},
+			error: function() { console.log('error');}
+		});
 		$.ajax({
 			type: 'POST',
 			url: '/TMBDdat',
