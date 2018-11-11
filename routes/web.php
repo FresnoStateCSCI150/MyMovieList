@@ -33,3 +33,7 @@ Route::post('friends/request', 'FriendsController@createFriendRequest')->middlew
 Route::post('friends/create', 'FriendsController@createFriendship');
 Route::post('friends/decline', 'FriendsController@declineFriendship');
 Route::post('friends/delete', 'FriendsController@deleteFriendship');
+
+// User functionality
+Route:: get('profile', 'UserController@profile');
+Route:: post('profile', 'UserController@update_avatar');
