@@ -99,7 +99,7 @@
 		$("#theButtons"+ id).empty();
 		var buttonText = "";
 		if (on) {
-			buttonText = "<button onclick=\"appendForm(" + id +")\" class=\"btn btn-primary\">Add Movie</button>";
+			buttonText = "<button onclick=\"appendForm(" + id + ")\" class=\"btn btn-primary\">Add Movie</button>";
 			$("#theButtons"+id).append(buttonText);
 		} else {
 			buttonText = "<button onclick=\"cancelReview(" + id + ")\" class=\"btn btn-danger\">Cancel</button><button onclick=\"confirmReview(" + id + ")\" class=\"btn btn-primary\">Submit Review</button>";
@@ -118,7 +118,12 @@
 		visbleAddMovieButton(true, id);
 	}
 
-	/*Implement later: Submit Review */
+	function submittedReviewResponse(id, message) {
+		cancelReview(id);
+		visbleAddMovieButton(false, id);
+		$('#div' + id).append("<p style=\"color:red;\">" + message + "</p>");
+	}
+
 	function confirmReview(id){
 		var moviedata;
 		for (var i = 0; i < JsonStrings.length; i++) {
@@ -148,7 +153,10 @@
 			url: '/MovieReview',
 			data: movRevData,
 			success: function (data) { 
-					obj = data; console.log(obj);},
+					obj = data;
+					if (obj['success']) {submittedReviewResponse(movRevData['tmdb_id'],obj['success']);}
+					else {submittedReviewResponse(movRevData['tmdb_id'],obj['exists']);}
+				},
 			error: function() { console.log('error');}
 		});
 		$.ajax({

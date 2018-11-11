@@ -48,7 +48,7 @@ class PageController extends Controller
 
 		if ($validatedData->fails()) {
 			return response()->json([
-				'Exists' => 'User has a review for this movie',
+				'exists' => 'You already have a review for this movie!',
 			]);
 		}
 
