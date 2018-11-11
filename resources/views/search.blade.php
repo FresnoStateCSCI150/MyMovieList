@@ -157,7 +157,7 @@
 					if (obj['success']) {submittedReviewResponse(movRevData['tmdb_id'],obj['success']);}
 					else {submittedReviewResponse(movRevData['tmdb_id'],obj['exists']);}
 				},
-			error: function() { console.log('error');}
+			error: function() { submittedReviewResponse(movRevData['tmdb_id'], "Error trying to submit!");}
 		});
 		$.ajax({
 			type: 'POST',
