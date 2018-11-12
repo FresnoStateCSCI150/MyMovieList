@@ -21,6 +21,8 @@ Route::get('account','PageController@account');
 // Search get and post methods
 Route::get('search', 'PageController@search');
 Route::post('TMBD', 'PageController@getTMDBjson');
+Route::post('TMBDdat', 'PageController@saveMovieData');
+Route::post('MovieReview', 'PageController@saveMovieReview');
 
 // Login and Register
 Auth::routes();
