@@ -24,7 +24,6 @@
                                 </button>
                             </div>
                         </div>
-                        
 					</div>
 				</div>
 				<div id="appendSearch"></div>
@@ -35,9 +34,16 @@
 
 
 <script type="text/javascript">
-
+	var JsonStrings = [];
+	var user = {{ Auth::user()->id }};
 	$('#searchButton').click(function() {
 		searchQuery();
+	});
+
+	$(".form-group").on('keyup', function (e) {
+    	if (e.keyCode == 13) {
+       		searchQuery();
+    	}
 	});
 
 	function searchQuery() {
@@ -63,7 +69,7 @@
 
 		
 	function showSearchResults(obj) {
-
+		JsonStrings = [];
 		for (var i = 0; i < obj.length; i++) {
 			$("#appendSearch").append("<hr />");
 			var makeCard ="<div class=\"card\">";
@@ -75,7 +81,17 @@
 			var buttonAdd = "<div id=\"theButtons" + currentMovie['id'] +"\"></div></div>";
 
 			$('#appendSearch').append(makeCard + movieTitle + posterImage + description + buttonAdd + "</div></div></div>");
-				visbleAddMovieButton(true, currentMovie['id']);
+
+			var data = {
+				'title': currentMovie['title'],
+				'tmdb_id':currentMovie['id'],
+				'poster': currentMovie['poster_path'],
+				'release': currentMovie['release_date'],
+				'tmdb_score': currentMovie['vote_average'],
+				'description': currentMovie['overview']
+			}
+			JsonStrings[i] = data;
+			visbleAddMovieButton(true, currentMovie['id']);
 		}
 	}	
 
@@ -92,7 +108,7 @@
 	}
 
 	function appendForm(id) {
-		var movieReviewText = "<x-star-rating value=\"5\" number=\"10\"></x-star-rating><div class=\"form-group\"><label for=\"review\">Your Review:</label><textarea class=\"form-control\" id=\"exampleFormControlTextarea1\" rows=\"3\"></textarea></div>";
+		var movieReviewText = "<x-star-rating id=\"starRating"+id+"\" value=\"5\" number=\"10\"></x-star-rating><div class=\"form-group\"><label for=\"review\">Your Review:</label><textarea class=\"form-control\" id=\"review"+id+"\" rows=\"3\"></textarea></div>";
 		$('#div' + id).append(movieReviewText);
 		visbleAddMovieButton(false, id);
 	}
@@ -102,9 +118,55 @@
 		visbleAddMovieButton(true, id);
 	}
 
-	/*Implement later: Submit Review */
+	function submittedReviewResponse(id, message) {
+		cancelReview(id);
+		visbleAddMovieButton(false, id);
+		$('#div' + id).append("<p style=\"color:red;\">" + message + "</p>");
+	}
+
 	function confirmReview(id){
-		console.log(id);
+		var moviedata;
+		for (var i = 0; i < JsonStrings.length; i++) {
+			if(JsonStrings[i]['tmdb_id'] == id) {
+				moviedata = JsonStrings[i];
+			}
+		}
+
+		var movdata = {
+			'title': moviedata['title'],
+			'tmdb_id':moviedata['tmdb_id'],
+			'img_path': moviedata['poster'],
+			'release': moviedata['release'],
+			'tmdb_score': moviedata['tmdb_score'],
+			'description': moviedata['description'],
+		}
+
+		var movRevData = {
+			'user_id': user,
+			'tmdb_id':moviedata['tmdb_id'],
+			'user_score': $('#starRating'+id).val(),
+			'user_review': $('#review'+id).val()
+		}
+
+		$.ajax({
+			type: 'POST',
+			url: '/MovieReview',
+			data: movRevData,
+			success: function (data) { 
+					obj = data;
+					if (obj['success']) {submittedReviewResponse(movRevData['tmdb_id'],obj['success']);}
+					else {submittedReviewResponse(movRevData['tmdb_id'],obj['exists']);}
+				},
+			error: function() { submittedReviewResponse(movRevData['tmdb_id'], "Error trying to submit!");}
+		});
+		$.ajax({
+			type: 'POST',
+			url: '/TMBDdat',
+			data: movdata,
+			success: function (data) { 
+					obj = data; console.log(obj);},
+			error: function() { console.log('error');}
+		});
 	}
 
 class StarRating extends HTMLElement {
