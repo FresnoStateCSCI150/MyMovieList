@@ -31,6 +31,6 @@ class MovieDataTable extends Migration
      */
     public function down()
     {
-        Scheme::dropIfExists('movie_data');
+        Schema::dropIfExists('movie_data');
     }
 }
