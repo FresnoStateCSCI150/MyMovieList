@@ -8,14 +8,15 @@ use Illuminate\Support\Facades\DB;
 
 class FriendRequestExists implements Rule
 {
+    private $userType;
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($userType)
     {
-        //
+        $this->userType = $userType;
     }
 
     /**
@@ -27,8 +28,14 @@ class FriendRequestExists implements Rule
      */
     public function passes($attribute, $value)
     {
-        $senderId = (int)$value;
-        $receiverId = Auth::id();
+        if ($this->userType == "receiver") {
+            $senderId = (int)$value;
+            $receiverId = Auth::id();
+        }
+        else if ($this->userType == "sender") {
+            $senderId = Auth::id();
+            $receiverId = (int)$value;
+        }
         $friendRequest = DB::table('friend_requests')->where('sender_id', '=', $senderId)
                                                      ->where('receiver_id', '=', $receiverId)->get();
         return count($friendRequest) > 0;
@@ -41,6 +48,11 @@ class FriendRequestExists implements Rule
      */
     public function message()
     {
-        return 'That user didn\'t send you a friend request.';
+        if ($this->userType == "receiver") {
+            return 'That user didn\'t send you a friend request.';
+        }
+        else if ($this->userType == "sender") {
+            return 'You didn\'t send that user a friend request.';
+        }
     }
 }

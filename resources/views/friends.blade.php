@@ -2,10 +2,10 @@
 
 @section ('content')
 
-	<h2>Add a new friend</h2>
+	<h3>Add a new friend</h3>
 
 	<hr>
-	<form class="form-inline" method="POST" action="/friends/request">
+	<form class="form-inline" method="POST" action="/friends/createrequest">
 
 		{{ csrf_field() }}
 
@@ -20,10 +20,10 @@
 
     <hr>
     @if (count($userFriendRequestsReceived) > 0)
-	<h2>You have friend requests</h2>
+	<h3>You have friend requests</h3>
 
     <hr>
-    <form class="form-inline" id="friendRequest" method="POST" action="/friends/create">
+    <form class="form-inline" id="friendRequest" method="POST" action="/friends/createrequest">
 
         {{ csrf_field() }}
 
@@ -44,7 +44,7 @@
         function changeToDecline() {
             var friendRequestForm = document.getElementById("friendRequest");
             if (friendRequestForm.hasAttribute("action")) {
-                friendRequestForm.setAttribute("action", "/friends/decline");
+                friendRequestForm.setAttribute("action", "/friends/declinerequest");
             }
         }
     </script>
@@ -52,10 +52,35 @@
         <h3>You currently have no friend requests</h3>
     @endif
 
+    <hr>
+    @if (count($userFriendRequestsSent) > 0)
+	<h3>You have sent friend requests to the following users:</h3>
+
+    <hr>
+    <form class="form-inline" id="friendRequestSend" method="POST" action="/friends/cancelrequest">
+
+        {{ csrf_field() }}
+
+        <label class="sr-only" for="receiver_name">Name</label>
+        <select class="custom-select mb-2 mr-sm-2" id="receiver_name" name="receiver_id" required>
+            @foreach ($userFriendRequestsSent as $request)
+                <option value="{{ $request->id }}">{{ $request->name }}</option>
+            @endforeach
+        </select>
+
+        <button type="submit" class="btn btn-primary mb-2">Cancel Friend Request</button>
+
+        @include ("fielderrors", ["fieldName" => "receiver_id"])
+
+    </form>
+    @else
+        <h3>You have not sent out any friend requests</h3>
+    @endif
+
 	<hr>
 
 	@if (count($userFriends) > 0)
-        <h2>These are your friends:</h2>
+        <h3>These are your friends:</h3>
         <ul>
             @foreach ($userFriends as $friend)
                 <li> {{ $friend->name }} </li>
