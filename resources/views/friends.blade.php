@@ -20,10 +20,10 @@
 
     <hr>
     @if (count($userFriendRequestsReceived) > 0)
-	<h3>You have friend requests</h3>
+	<h3>You have received friend requests from the following users:</h3>
 
     <hr>
-    <form class="form-inline" id="friendRequest" method="POST" action="/friends/createrequest">
+    <form class="form-inline" id="friendRequest" method="POST" action="/friends/create">
 
         {{ csrf_field() }}
 
@@ -49,7 +49,7 @@
         }
     </script>
     @else
-        <h3>You currently have no friend requests</h3>
+        <h3>You have not received any friend requests</h3>
     @endif
 
     <hr>
