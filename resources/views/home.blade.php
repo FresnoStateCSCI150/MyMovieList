@@ -7,6 +7,7 @@
             <div class="top-right links">
                 @auth
                     <h1>Welcome, {{ Auth::user()->name }}!</h1>
+
                     <div class="mx-auto" style="width: 200px;"><h2><u>Your Reviews</u></h2></div>
                     <table class="table">
                             <thead>
@@ -34,8 +35,9 @@
                     @endforeach
                         </tbody>
                         </table>
+
                 @else
-                    <h1>Welcome, to MyMovieList!</h1>
+                    <h1>Welcome to MyMovieList!</h1>
                     <h2>Please register or login!</h2>
                 @endauth
             </div>
