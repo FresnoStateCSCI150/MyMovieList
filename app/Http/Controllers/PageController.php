@@ -13,12 +13,17 @@ class PageController extends Controller
 {
 	public function home()
 	{
-		$mergeReview = DB::table('movie_reviews')
+		if(!Auth::user()) {
+			return view('home');
+		}
+		else {
+			$mergeReview = DB::table('movie_reviews')
 					->join('movie_data','movie_data.tmdb_id','=','movie_reviews.tmdb_id')
 					->select('movie_reviews.review','movie_reviews.user_score', 'movie_data.tmdb_score','movie_data.title','movie_data.img_path', 'movie_data.release', 'movie_data.description')
 					->where('movie_reviews.user_id', Auth::user()->id)->orderBy('movie_reviews.user_score', 'DESC')->get();
 
-		return view('home')->with('reviews', $mergeReview);
+			return view('home')->with('reviews', $mergeReview);
+		}
 	}
 	
 	public function about()
