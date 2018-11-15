@@ -8,8 +8,7 @@
                 @auth
                     <h1>Welcome, {{ Auth::user()->name }}!</h1>
                     <div class="mx-auto" style="width: 200px;"><h2><u>Your Reviews</u></h2></div>
-                    @foreach($reviews as $review)
-                        <table class="table">
+                    <table class="table">
                             <thead>
                                 <tr>
                                     <th scope="col">My Score</th>
@@ -22,7 +21,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            <tbody>
+                    @foreach($reviews as $review)
                                 <tr>
                                     <td>{{$review->user_score}}</td>
                                     <td><img src="http://image.tmdb.org/t/p/w200{{$review->img_path}}"></td>
@@ -32,9 +31,9 @@
                                     <td>{{$review->tmdb_score}}</td>
                                     <td>{{$review->review}}</td>
                                 </tr>
-                            </tbody>
-                        </table>
                     @endforeach
+                        </tbody>
+                        </table>
                 @else
                     <h1>Welcome, to MyMovieList!</h1>
                     <h2>Please register or login!</h2>
