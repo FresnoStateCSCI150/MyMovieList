@@ -30,6 +30,6 @@ class MovieReviewTable extends Migration
      */
     public function down()
     {
-        Scheme::dropIfExists('movie_reviews');
+        Schema::dropIfExists('movie_reviews');
     }
 }

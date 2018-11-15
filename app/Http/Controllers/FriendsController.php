@@ -29,10 +29,20 @@ class FriendsController extends Controller
         return redirect()->route('friends');
     }
 
+    public function cancelFriendRequest()
+    {
+        return $this->deleteFriendRequest("sender");
+    }
+
+    public function declineFriendRequest()
+    {
+        return $this->deleteFriendRequest("receiver");
+    }
+
     public function createFriendship()
     {
         $this->validate(request(), [
-            'id' => new FriendRequestExists,
+            'id' => new FriendRequestExists("receiver"),
         ]);
 
         $receiver = Auth::user();
@@ -45,14 +55,26 @@ class FriendsController extends Controller
         return redirect()->route('friends');
     }
 
-    public function declineFriendship()
+    public function deleteFriendRequest(String $userType)
     {
+        if ($userType == "receiver") {
+            $name = "id";
+        }
+        else if ($userType == "sender") {
+            $name = "receiver_id";
+        }
         $this->validate(request(), [
-            'id' => new FriendRequestExists,
+            $name => new FriendRequestExists($userType),
         ]);
 
-        $receiver = Auth::user();
-        $sender = App\User::find((int)request('id'));
+        if ($userType == "receiver") {
+            $sender = App\User::find((int)request($name));
+            $receiver = Auth::user();
+        }
+        else if ($userType == "sender") {
+            $sender = Auth::user();
+            $receiver = App\User::find((int)request($name));
+        }
 
         $sender->friendRequestsSent()->detach($receiver->id);
 
