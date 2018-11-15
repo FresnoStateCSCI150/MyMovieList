@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Movie_Data;
 use App\Movie_Review;
 use Validator;
@@ -12,7 +13,12 @@ class PageController extends Controller
 {
 	public function home()
 	{
-		return view('home');
+		$mergeReview = DB::table('movie_reviews')
+					->join('movie_data','movie_data.tmdb_id','=','movie_reviews.tmdb_id')
+					->select('movie_reviews.review','movie_reviews.user_score', 'movie_data.tmdb_score','movie_data.title','movie_data.img_path', 'movie_data.release', 'movie_data.description')
+					->where('movie_reviews.user_id', Auth::user()->id)->orderBy('movie_reviews.user_score', 'DESC')->get();
+
+		return view('home')->with('reviews', $mergeReview);
 	}
 	
 	public function about()
