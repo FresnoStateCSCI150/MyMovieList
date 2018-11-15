@@ -9,9 +9,11 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('home');
-})->name('home');
+})->name('home');*/
+Route::get('/', 'PageController@home');
+Route::get('home','PageController@home');
 Route::get('about','PageController@about');
 Route::get('discussion', 'PostsController@index');
 Route::get('discussion/{post}', 'PostsController@show');
@@ -31,10 +33,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // Friends functionality
 Route::get('friends', 'FriendsController@friends')->middleware('auth')->name('friends');
-Route::post('friends/request', 'FriendsController@createFriendRequest')->middleware('auth');
-Route::post('friends/create', 'FriendsController@createFriendship');
-Route::post('friends/decline', 'FriendsController@declineFriendship');
-Route::post('friends/delete', 'FriendsController@deleteFriendship');
+Route::post('friends/createrequest', 'FriendsController@createFriendRequest')->middleware('auth');
+Route::post('friends/cancelrequest', 'FriendsController@cancelFriendRequest')->middleware('auth');
+Route::post('friends/create', 'FriendsController@createFriendship')->middleware('auth');
+Route::post('friends/declinerequest', 'FriendsController@declineFriendRequest')->middleware('auth');
+Route::post('friends/delete', 'FriendsController@deleteFriendship')->middleware('auth');
 
 // User functionality
 Route:: get('profile', 'UserController@profile');
