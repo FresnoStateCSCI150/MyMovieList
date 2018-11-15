@@ -8,8 +8,31 @@
                 @auth
                     <h1>Welcome, {{ Auth::user()->name }}!</h1>
                     @foreach($reviews as $review)
-                        <p> {{ $review->tmdb_id }} </p>
-                        <p> {{ $review->user_review }} </p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Movie Title</th>
+                                    <th scope="col">Movie Description</th>
+                                    <th scope="col">Movie Release</th>
+                                    <th scope="col">TMDB Score</th>
+                                    <th scope="col">My Score</th>
+                                    <th scope="col">My Review</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tbody>
+                                <tr>
+                                    <td><img src="http://image.tmdb.org/t/p/w200{{$review->img_path}}"></td>
+                                    <td>{{$review->title}}</td>
+                                    <td>{{$review->description}}</td>
+                                    <td>{{$review->release}}</td>
+                                    <td>{{$review->tmdb_score}}</td>
+                                    <td>{{$review->user_score}}</td>
+                                    <td>{{$review->review}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     @endforeach
                 @else
                     <h1>Welcome, to MyMovieList!</h1>
