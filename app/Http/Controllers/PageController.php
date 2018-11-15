@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Movie_Data;
 use App\Movie_Review;
 use Validator;
@@ -12,7 +13,8 @@ class PageController extends Controller
 {
 	public function home()
 	{
-		return view('home');
+		$reviews = Movie_Review::all();
+		return view('home')->with('reviews', $reviews);
 	}
 	
 	public function about()
