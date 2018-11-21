@@ -81,9 +81,12 @@
 
 	@if (count($userFriends) > 0)
         <h3>These are your friends:</h3>
-        <ul>
+        <ul class="list-group">
             @foreach ($userFriends as $friend)
-                <li> {{ $friend->name }} </li>
+                <div class="d-flex">
+                    <img src="/uploads/avatars/{{ $friend->avatar }}" style="width: 36px; height: 36px; border-radius: 50%">
+                    <li class="list-group-item border-0 bg-none p-2"> {{ $friend->name }} </li>
+                </div>
             @endforeach
         </ul>
 	@else
