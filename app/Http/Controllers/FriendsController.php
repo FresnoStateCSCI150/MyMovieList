@@ -8,6 +8,7 @@ use App\Rules\FriendRequestUnique;
 use App;
 use App\Rules\FriendRequestExists;
 use App\Rules\FriendshipExists;
+use Validator;
 
 class FriendsController extends Controller
 {
@@ -81,19 +82,26 @@ class FriendsController extends Controller
         return redirect()->route('friends');
     }
 
-    public function deleteFriendship()
+    public function deleteFriendship(Request $request)
     {
-        $this->validate(request(), [
+        $validatedData = Validator::make($request->all(), [
             'toDeleteId' => new FriendshipExists,
         ]);
 
+        if ($validatedData->fails()) {
+            return response()->json([
+                "friendshipNonexistent" => "You are not friends with this user."
+            ]);
+        }
+
         $deleter = Auth::user();
-        $deletee = App\User::find((int)request('toDeleteId'));
+        $deletee = App\User::find(request('toDeleteId'));
 
         $deleter->friends()->detach($deletee->id);
         $deletee->friends()->detach($deleter->id);
 
-        return redirect()->route('friends');
+        return response()->json(["success" => "You have successfully removed " . $deletee->name . " as a friend."]);
+        //return redirect()->route('friends');
     }
 
 	// Return a page which shows a list of the logged in user's friends.

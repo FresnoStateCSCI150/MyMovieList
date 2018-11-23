@@ -40,7 +40,7 @@
         @include ("fielderrors", ["fieldName" => "id"])
 
     </form>
-    <script>
+    <script type="text/javascript">
         function changeToDecline() {
             var friendRequestForm = document.getElementById("friendRequest");
             if (friendRequestForm.hasAttribute("action")) {
@@ -83,34 +83,46 @@
         <h3>These are your friends:</h3>
         <ul class="list-group">
             @foreach ($userFriends as $friend)
-                <div class="d-flex">
+                <div class="d-inline-flex" id="{{ $friend->id }}">
                     <img src="/uploads/avatars/{{ $friend->avatar }}" style="width: 36px; height: 36px; border-radius: 50%">
                     <li class="list-group-item border-0 bg-none p-2"> {{ $friend->name }} </li>
+                    <div class="dropdown pl-0 pt-1">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"></a>
+                        <div class="dropdown-menu">
+                            <button class="dropdown-item" type="button" onclick="deleteFriend({{ $friend->id }})">Delete</button>
+                        </div>
+                    </div>
+                    <div id="delete-message-{{ $friend->id }}"></div>
                 </div>
             @endforeach
         </ul>
+        <script type="text/javascript">
+            function deleteFriend(friendId) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({type: "POST",
+                        url: "/friends/delete",
+                        data: { "toDeleteId": friendId },
+                        success: function (data) {
+                            if (data["success"]) {
+                                $("#" + friendId).remove();
+                                console.log(data["success"]);
+                            }
+                            else {
+                                console.log(data["friendshipNonexistent"]);
+                            }
+                        },
+                        error: function (errorData) {
+                            console.log(errorData);
+                        },
+                        dataType: "json",
+                });
+            }
+        </script>
 	@else
 		<h3>You currently have no friends.</h3>
 	@endif
-
-    <hr>
-    @if (count($userFriends) > 0)
-    <h5>You can delete any friend here:</h5>
-    <form class="form-inline" method="POST" action="/friends/delete">
-
-        {{ csrf_field() }}
-
-        <label class="sr-only" for="requester_name">Name</label>
-        <select class="custom-select mb-2 mr-sm-2" id="requester_name" name="toDeleteId" required>
-            @foreach ($userFriends as $friend)
-                <option value="{{ $friend->id }}">{{ $friend->name }}</option>
-            @endforeach
-        </select>
-
-        <button type="submit" class="btn btn-primary mb-2">Delete Friend</button>
-
-        @include ("fielderrors", ["fieldName" => "toDeleteId"])
-
-    </form>
-    @endif
 @endsection
