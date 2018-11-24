@@ -89,6 +89,7 @@
                     <div class="dropdown pl-0 pt-1">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#"></a>
                         <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/friends/{{ $friend->id }}">Movie Reviews</a>
                             <button class="dropdown-item" type="button" onclick="deleteFriend({{ $friend->id }})">Delete</button>
                         </div>
                     </div>
