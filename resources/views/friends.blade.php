@@ -1,28 +1,28 @@
-@extends ('template')
+@extends ("template")
 
-@section ('content')
+@section ("content")
 
 	<h3>Add a new friend</h3>
 
-	<hr>
-	<form class="form-inline" method="POST" action="/friends/createrequest">
+    <hr>
+    <form class="form-inline" method="POST" action="/friends/createrequest">
 
-		{{ csrf_field() }}
+        {{ csrf_field() }}
 
-		<label class="sr-only" for="name">Name</label>
-		<input type="text" class="form-control mb-2 mr-sm-2" id="name" name="name" placeholder="Name" required>
+        <label class="sr-only" for="name">Name</label>
+        <input type="text" class="form-control mb-2 mr-sm-2" id="name" name="name" placeholder="Name" required>
 
-		<button type="submit" class="btn btn-primary mb-2">Send Friend Request</button>
+        <button type="submit" class="btn btn-primary mb-2">Send Friend Request</button>
 
-		@include ("fielderrors", ["fieldName" => "name"])
+        @include ("fielderrors", ["fieldName" => "name"])
+        @include ("flash-messages/success", ["successVar" => "requestSuccess"])
 
-	</form>
+    </form>
 
     <hr>
     @if (count($userFriendRequestsReceived) > 0)
 	<h3>You have received friend requests from the following users:</h3>
 
-    <hr>
     <form class="form-inline" id="friendRequest" method="POST" action="/friends/create">
 
         {{ csrf_field() }}
@@ -38,6 +38,8 @@
         <button type="submit" class="btn btn-primary mb-2 ml-2" onclick="changeToDecline()">Decline Friend Request</button>
 
         @include ("fielderrors", ["fieldName" => "id"])
+        @include ("flash-messages/success", ["successVar" => "friendSuccess"])
+        @include ("flash-messages/success", ["successVar" => "declineSuccess"])
 
     </form>
     <script type="text/javascript">
@@ -56,7 +58,6 @@
     @if (count($userFriendRequestsSent) > 0)
 	<h3>You have sent friend requests to the following users:</h3>
 
-    <hr>
     <form class="form-inline" id="friendRequestSend" method="POST" action="/friends/cancelrequest">
 
         {{ csrf_field() }}
@@ -71,6 +72,7 @@
         <button type="submit" class="btn btn-primary mb-2">Cancel Friend Request</button>
 
         @include ("fielderrors", ["fieldName" => "receiver_id"])
+        @include ("flash-messages/success", ["successVar" => "cancelSuccess"])
 
     </form>
     @else
@@ -101,7 +103,7 @@
             function deleteFriend(friendId) {
                 $.ajaxSetup({
                     headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content")
                     }
                 });
                 $.ajax({type: "POST",
@@ -113,7 +115,8 @@
                                 console.log(data["success"]);
                             }
                             else {
-                                console.log(data["friendshipNonexistent"]);
+                                $("#delete-message-" + friendId).append(data["html"]);
+                                console.log(data["success"]);
                             }
                         },
                         error: function (errorData) {

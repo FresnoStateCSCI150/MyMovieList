@@ -27,7 +27,8 @@ class FriendsController extends Controller
         // Create a new friend request
         $sender->friendRequestsSent()->attach($receiverId);
 
-        return redirect()->route('friends');
+        request()->session()->flash("requestSuccess", "You have successfully made the friend request.");
+        return redirect()->route("friends");
     }
 
     public function cancelFriendRequest()
@@ -52,6 +53,8 @@ class FriendsController extends Controller
         $sender->friends()->attach($receiver->id);
         $receiver->friends()->attach($sender->id);
         $sender->friendRequestsSent()->detach($receiver->id);
+
+        request()->session()->flash("friendSuccess", "You are now friends.");
 
         return redirect()->route('friends');
     }
@@ -79,6 +82,13 @@ class FriendsController extends Controller
 
         $sender->friendRequestsSent()->detach($receiver->id);
 
+        if ($userType == "receiver" ) {
+            request()->session()->flash("declineSuccess", "You have successfully declined the friend request.");
+        }
+        else if ($userType == "sender") {
+            request()->session()->flash("cancelSuccess", "You have successfully canceled the friend request.");
+        }
+
         return redirect()->route('friends');
     }
 
@@ -89,8 +99,12 @@ class FriendsController extends Controller
         ]);
 
         if ($validatedData->fails()) {
+            $viewFailure = view("flash-messages/alert-ajax")
+                               ->with("failureMessage", "You are not friends with this user.")
+                               ->render();
             return response()->json([
-                "friendshipNonexistent" => "You are not friends with this user."
+                "html" => $viewFailure,
+                "success" => false,
             ]);
         }
 
@@ -100,7 +114,7 @@ class FriendsController extends Controller
         $deleter->friends()->detach($deletee->id);
         $deletee->friends()->detach($deleter->id);
 
-        return response()->json(["success" => "You have successfully removed " . $deletee->name . " as a friend."]);
+        return response()->json(["success" => true]);
         //return redirect()->route('friends');
     }
 
