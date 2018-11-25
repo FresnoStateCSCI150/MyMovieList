@@ -29,8 +29,6 @@ Route::post('MovieReview', 'PageController@saveMovieReview');
 // Login and Register
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-
 // Friends functionality
 Route::get('friends', 'FriendsController@friends')->middleware('auth')->name('friends');
 Route::get('friends/{friendId}', 'PageController@friendsMovies')->middleware('auth');
