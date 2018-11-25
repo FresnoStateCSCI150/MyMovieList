@@ -33,6 +33,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // Friends functionality
 Route::get('friends', 'FriendsController@friends')->middleware('auth')->name('friends');
+Route::get('friends/{friendId}', 'PageController@friendsMovies')->middleware('auth');
 Route::post('friends/createrequest', 'FriendsController@createFriendRequest')->middleware('auth');
 Route::post('friends/cancelrequest', 'FriendsController@cancelFriendRequest')->middleware('auth');
 Route::post('friends/create', 'FriendsController@createFriendship')->middleware('auth');

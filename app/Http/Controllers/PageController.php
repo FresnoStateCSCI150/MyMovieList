@@ -15,17 +15,28 @@ class PageController extends Controller
 	{
 		if (Auth::check())
 		{
-			$mergeReview = DB::table('movie_reviews')
-			->join('movie_data','movie_data.tmdb_id','=','movie_reviews.tmdb_id')
-			->select('movie_reviews.review','movie_reviews.user_score', 'movie_data.tmdb_score','movie_data.title','movie_data.img_path', 'movie_data.release', 'movie_data.description')
-			->where('movie_reviews.user_id', Auth::user()->id)->orderBy('movie_reviews.user_score', 'DESC')->get();
+            $mergeReview = $this->userReviews(Auth::user()->id);
 
-			return view('home')->with('reviews', $mergeReview);
+			return view('home', ['reviews' => $mergeReview, 'userId' => Auth::user()->id]);
 		}
 		else
 			return view('home');
-	}
-	
+    }
+
+    public function friendsMovies($friendId)
+    {
+        $mergeReview = $this->userReviews($friendId);
+        return view('home', ['reviews' => $mergeReview, 'userId' => $friendId]);
+    }
+
+    private function userReviews($userId)
+    {
+        return DB::table('movie_reviews')
+        ->join('movie_data','movie_data.tmdb_id','=','movie_reviews.tmdb_id')
+        ->select('movie_reviews.review','movie_reviews.user_score', 'movie_data.tmdb_score','movie_data.title','movie_data.img_path', 'movie_data.release', 'movie_data.description')
+        ->where('movie_reviews.user_id', $userId)->orderBy('movie_reviews.user_score', 'DESC')->get();
+    }
+
 	public function about()
 	{
 		return view('about');
@@ -67,16 +78,16 @@ class PageController extends Controller
 			//Models
 			$Review = new Movie_Review;
 
-			$Review->user_id = $request->user_id; 
+			$Review->user_id = $request->user_id;
 			$Review->tmdb_id = $request->tmdb_id;
 			$Review->user_score = $request->user_score;
-			$Review->review = $request->user_review;	
+			$Review->review = $request->user_review;
 			if($Review->save()) {
 				return response()->json([
 					'success' => 'Review saved!'
 				]);
-			}	
-		} 
+			}
+		}
 		catch(\Exception $e) {
 			return response()->json([
 				'err' => $e->getMessage(),
@@ -85,7 +96,7 @@ class PageController extends Controller
 	}
 
 	public function saveMovieData(Request $request){
-		
+
 		$validatedData = Validator::make($request->all(), [
 			'tmdb_id' => 'required|unique:movie_data'
 		]);
@@ -96,7 +107,7 @@ class PageController extends Controller
 			]);
 		}
 
-		try {        
+		try {
 			//process data and submit
 			$MovDat = new Movie_Data;
 			$MovDat->tmdb_id = $request->input('tmdb_id');
@@ -111,7 +122,7 @@ class PageController extends Controller
 				'success' => 'success',
 			]);
 
-		} 
+		}
 		catch(\Exception $e) {
 				return response()->json([
 				'err' => $e->getMessage(),
