@@ -6,8 +6,11 @@
         @if (Route::has('login'))
             <div class="top-right links">
                 @auth
-                    <h1>Welcome, {{ Auth::user()->name }}!</h1>
-
+                    @if ($userId == Auth::user()->id)
+                        <h1>Welcome, {{ Auth::user()->name }}!</h1>
+                    @else
+                        <h1>Welcome to {{ \App\User::find($userId)->name }}'s movie reviews</h1>
+                    @endif
                     <div class="mx-auto" style="width: 200px;"><h2><u>Your Reviews</u></h2></div>
                     <table class="table">
                             <thead>
