@@ -2,10 +2,22 @@
 
 @section ('content')
 
-	<h1>Discussions go here.</h1>
-	<h1>Index.</h1>
-	<div class="links">
-		<a href="discussion/show">Click here to show discussion post.</a>
+	<h1>Discussions</h1>
+	
+	<hr>
+
+	<a class="btn btn-primary" href="discussion/create" role="button">Create a post</a>
+
+	<hr>
+
+	<div class="col-sm-8 blog-main">
+
+		@foreach ($posts as $post)
+			@include ('posts.post')
+		@endforeach
+
 	</div>
+
+	<hr>
 
 @endsection
