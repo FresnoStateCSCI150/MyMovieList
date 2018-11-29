@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Movie_Data;
 use App\Movie_Review;
 use Validator;
+use Illuminate\Support\Facades\Gate;
 
 class PageController extends Controller
 {
@@ -25,8 +26,13 @@ class PageController extends Controller
 
     public function friendsMovies($friendId)
     {
-        $mergeReview = $this->userReviews($friendId);
-        return view('home', ['reviews' => $mergeReview, 'userId' => $friendId]);
+        if (Gate::allows("go-to-user-reviews", $friendId)) {
+            $mergeReview = $this->userReviews($friendId);
+            return view('home', ['reviews' => $mergeReview, 'userId' => $friendId]);
+        }
+        else {
+            return view("unauthorized");
+        }
     }
 
     private function userReviews($userId)
