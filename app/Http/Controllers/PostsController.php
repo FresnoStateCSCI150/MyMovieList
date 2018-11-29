@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Post;
 
 class PostsController extends Controller
 {
@@ -17,7 +18,9 @@ class PostsController extends Controller
 
     public function index()
     {
-    	return view('posts.index');
+        $posts = Post::all();
+
+    	return view('posts.index', compact('posts'));
     }
 
     public function show()
@@ -30,5 +33,17 @@ class PostsController extends Controller
     	return view('posts.create');
     }
 
-    //store function
+    public function store()
+    {
+        $this->validate(request(), [
+            'title' => 'required',
+            'body' => 'required'
+        ]);
+
+        // create a new post using the request data and save to database
+        Post::create(request(['title', 'body']));
+
+        // redirect to home page
+        return redirect('discussion');
+    }
 }
