@@ -39,8 +39,9 @@ Route::post('friends/delete', 'FriendsController@deleteFriendship')->middleware(
 Route:: get('profile', 'UserController@profile');
 Route:: post('profile', 'UserController@update_avatar');
 
-// Discussion functionality
-Route::get('discussion', 'PostsController@index');
-/*Route::get('discussion/{post}', 'PostsController@show');*/
+// Discussion and Comments functionality
+Route::get('/discussion', 'PostsController@index');
+Route::get('/discussion/{post}', 'PostsController@show');
 Route::get('/discussion/create', 'PostsController@create');
 Route::post('/discussion', 'PostsController@store');
+Route::post('/discussion/{post}/comments', 'CommentsController@index');
