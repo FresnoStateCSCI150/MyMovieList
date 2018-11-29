@@ -6,7 +6,7 @@
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-md-8">
-				<div class="card">
+				<div class="card shadow-sm bg-white rounded">
 					<div class="card-header">{{ __('Search') }}</div>
 
 					<div class="card-body">
@@ -72,7 +72,7 @@
 		JsonStrings = [];
 		for (var i = 0; i < obj.length; i++) {
 			$("#appendSearch").append("<hr />");
-			var makeCard ="<div class=\"card\">";
+			var makeCard ="<div class=\"card shadow-sm bg-white rounded\">";
 			var currentMovie = obj[i];
 			var movieTitle = "<div class=\"card-header\"><div style=\"float:left;\"><b>" + currentMovie['title'] + "</b> (" + currentMovie['release_date'].substring(0,4) + ")</div> <div style=\"float:right;\"><b>TMDB average score:</b> " + currentMovie['vote_average'] + "</div><div class=\"clearfix\"></div></div><div class=\"card-body\"><div class=\"container\"><div class=\"row\">";
 			var posterUrl = "http://image.tmdb.org/t/p/w200" + currentMovie['poster_path'];
