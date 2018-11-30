@@ -42,4 +42,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\User', 'friend_requests', 'sender_id', 'receiver_id');
     }
+
+    public function recommendedMovies()
+    {
+        return $this->belongsToMany('App\User', 'recommends', 'user_id', 'movie_review_id');
+    }
 }

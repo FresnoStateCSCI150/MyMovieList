@@ -17,8 +17,13 @@ class PageController extends Controller
 		if (Auth::check())
 		{
             $mergeReview = $this->userReviews(Auth::user()->id);
+            $recommendIds = array_column(Auth::user()->recommendedMovies()->orderBy('created_at', 'DESC')->get()->toArray(), 'movie_review_id');
+            $recommends = DB::table('movie_reviews')
+                ->join('movie_data','movie_data.tmdb_id','=','movie_reviews.tmdb_id')
+                ->select('movie_reviews.review','movie_reviews.user_score', 'movie_data.tmdb_score','movie_data.title','movie_data.img_path', 'movie_data.release', 'movie_data.description')
+                ->whereIn('movie_reviews.id', $recommendIds)->get();
 
-			return view('home', ['reviews' => $mergeReview, 'userId' => Auth::user()->id]);
+			return view('home', ['reviews' => $mergeReview, 'recommends' => $recommends, 'userId' => Auth::user()->id,]);
 		}
 		else
 			return view('home');
