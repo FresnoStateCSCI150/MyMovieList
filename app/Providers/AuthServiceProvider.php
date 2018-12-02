@@ -25,6 +25,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define("go-to-user-reviews", function ($user, $userId)
+        {
+            return $user->friends()->where("friend_id", "=", $userId)->get()->count() > 0;
+        });
     }
 }

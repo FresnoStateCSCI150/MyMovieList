@@ -2,7 +2,7 @@
 
 @section ('content')
 
-<main class = "py-4">	
+<main class = "py-4">
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-md-8">
@@ -14,7 +14,7 @@
 							<label class="col-sm-4 col-form-label text-md-right">{{ __('Search For Movie') }}</label>
 							<div class="col-md-6">
 								<input type="search" class="form-control" id="search" placeholder="Movie Name">
-							</div> 
+							</div>
 						</div>
 
 						<div class="form-group row mb-0">
@@ -61,13 +61,13 @@
 			type: 'POST',
 			url: '/TMBD',
 			data: {data: searchMovie},
-			success: function (data) { 
+			success: function (data) {
 					obj = data['success']['results']; console.log(obj); showSearchResults(obj)},
 			error: function() { console.log(searchMovie);}
 		});
 	};
 
-		
+
 	function showSearchResults(obj) {
 		JsonStrings = [];
 		for (var i = 0; i < obj.length; i++) {
@@ -93,7 +93,7 @@
 			JsonStrings[i] = data;
 			visbleAddMovieButton(true, currentMovie['id']);
 		}
-	}	
+	}
 
 	function visbleAddMovieButton(on, id){
 		$("#theButtons"+ id).empty();
@@ -152,7 +152,7 @@
 			type: 'POST',
 			url: '/MovieReview',
 			data: movRevData,
-			success: function (data) { 
+			success: function (data) {
 					obj = data;
 					if (obj['success']) {submittedReviewResponse(movRevData['tmdb_id'],obj['success']);}
 					else {submittedReviewResponse(movRevData['tmdb_id'],obj['exists']);}
@@ -163,7 +163,7 @@
 			type: 'POST',
 			url: '/TMBDdat',
 			data: movdata,
-			success: function (data) { 
+			success: function (data) {
 					obj = data; console.log(obj);},
 			error: function() { console.log('error');}
 		});

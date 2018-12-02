@@ -45,3 +45,6 @@ Route::get('/discussion/{post}', 'PostsController@show');
 Route::get('/discussion/create', 'PostsController@create');
 Route::post('/discussion', 'PostsController@store');
 Route::post('/discussion/{post}/comments', 'CommentsController@index');
+
+// Recommend functionality
+Route::post('recommends/create', 'PageController@recommendMovie');
