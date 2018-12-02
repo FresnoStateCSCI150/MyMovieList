@@ -12,6 +12,9 @@
                 </div>
 
                 <div class="col-9">
+                @if ($isRecommend)
+                    <h5>Recommended by {{ \App\User::find($review->recommender_id)->name }}</h5>
+                @endif
                 <table class="table table-bordered">
                     <thead>
                     <tr>
@@ -35,8 +38,8 @@
                 <table class="table table-bordered">
                     <thead>
                     <tr>
-                        <th scope="col" style="width: 12%">My Score</th>
-                        <th scope="col">My Review</th>
+                        <th scope="col" style="width: 12%">{{ $reviewerScoreHeading }}</th>
+                        <th scope="col">{{ $reviewerReviewHeading }}</th>
                     </tr>
                     </thead>
 
