@@ -51,7 +51,7 @@ class PageController extends Controller
             return view('home', ['reviews' => $mergeReview, 'userId' => $friendId]);
         }
         else {
-            return view("unauthorized");
+            return view("errors/unauthorized");
         }
     }
 

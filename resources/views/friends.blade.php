@@ -14,7 +14,7 @@
 
         <button type="submit" class="btn btn-primary mb-2">Send Friend Request</button>
 
-        @include ("fielderrors", ["fieldName" => "name"])
+        @include ("errors/fielderrors", ["fieldName" => "name"])
         @include ("flash-messages/success", ["successVar" => "requestSuccess"])
 
     </form>
@@ -37,7 +37,7 @@
         <button type="submit" class="btn btn-primary mb-2">Accept Friend Request</button>
         <button type="submit" class="btn btn-primary mb-2 ml-2" onclick="changeToDecline()">Decline Friend Request</button>
 
-        @include ("fielderrors", ["fieldName" => "id"])
+        @include ("errors/fielderrors", ["fieldName" => "id"])
         @include ("flash-messages/success", ["successVar" => "friendSuccess"])
         @include ("flash-messages/success", ["successVar" => "declineSuccess"])
 
@@ -71,7 +71,7 @@
 
         <button type="submit" class="btn btn-primary mb-2">Cancel Friend Request</button>
 
-        @include ("fielderrors", ["fieldName" => "receiver_id"])
+        @include ("errors/fielderrors", ["fieldName" => "receiver_id"])
         @include ("flash-messages/success", ["successVar" => "cancelSuccess"])
 
     </form>
