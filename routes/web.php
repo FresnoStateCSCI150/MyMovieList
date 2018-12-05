@@ -41,10 +41,10 @@ Route:: post('profile', 'UserController@update_avatar');
 
 // Discussion and Comments functionality
 Route::get('/discussion', 'PostsController@index');
-Route::get('/discussion/{post}', 'PostsController@show');
 Route::get('/discussion/create', 'PostsController@create');
+Route::get('/discussion/{post}', 'PostsController@show');
 Route::post('/discussion', 'PostsController@store');
-Route::post('/discussion/{post}/comments', 'CommentsController@index');
+Route::post('/discussion/{post}/comments', 'CommentsController@store');
 
 // Recommend functionality
 Route::post('recommends/create', 'PageController@recommendMovie');

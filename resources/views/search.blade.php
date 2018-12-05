@@ -1,4 +1,4 @@
-@extends ('template')
+@extends ('templates/master')
 
 @section ('content')
 

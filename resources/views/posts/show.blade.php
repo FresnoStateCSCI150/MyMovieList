@@ -1,4 +1,4 @@
-@extends ('template')
+@extends ('templates/master')
 
 @section ('content')
 
@@ -9,8 +9,9 @@
 		{{ $post->body }}
 
 		<hr>
-
-		{{-- List of available comments --}}		
+ 
+		{{-- List of available comments --}}
+		@if(count($post->comments))	
 		<div class="comments">
 			<ul class="list-group">
 				@foreach ($post->comments as $comment)
@@ -25,19 +26,24 @@
 		</div>
 
 		<hr>
+		@endif
 
 		{{-- Add a comment --}}
 		<div class="card">
-			<div class="card-block">
-				<form method="POST" action="/dicussion/{{ $post->id }}/comments">
+			<div class="card-block m-3">
+				<h5>Join the conversation.</h5>
+				<form method="POST" action="/discussion/{{ $post->id }}/comments">
 					{{ csrf_field() }}
 					<div class="form-group">
-						<textarea name="body" placeholder="Your comment here." class="form-control"></textarea>
+						<textarea name="body" placeholder="Your comment here." class="form-control" required></textarea>
 					</div>
 					<div class="form-group">
 						<button type="submit" class="btn btn-primary">Add Comment</button>
 					</div>
 				</form>
+
+				@include('errors/errors')
+
 			</div>
 		</div>
 

@@ -42,7 +42,7 @@
     </head>
     <body>
 
-        @include('_includes/nav/topnav')
+        @include('templates/topnav')
 
         <div class="li">
             @yield('content')
