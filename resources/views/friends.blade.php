@@ -129,16 +129,12 @@
                 });
             }
         </script>
-<<<<<<< HEAD
+
         @else
         <h3>You currently have no friends 😞</h3>
         @endif
     </div>
 </div>
 </div>
-=======
-	@else
-		<h3>You currently have no friends.</h3>
-	@endif
->>>>>>> parent of a42c554... Update friends.blade.php
+
 @endsection
