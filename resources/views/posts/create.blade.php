@@ -1,4 +1,4 @@
-@extends ('template')
+@extends ('templates/master')
 
 @section ('content')
 
@@ -28,17 +28,7 @@
 				<button type="submit" class="btn btn-primary">Post</button>
 			</div>
 
-			@if (count($errors))
-			<div class="form-group">
-				<div class="alert alert-danger">
-					<ul>
-						@foreach ($errors->all() as $error)
-							<li>{{ $error }}</li>
-						@endforeach
-					</ul>
-				</div>
-			</div>
-			@endif
+			@include('errors/errors')
 
 		</form>
 
