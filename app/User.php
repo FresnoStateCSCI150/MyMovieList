@@ -28,6 +28,17 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function publish(Post $post)
+    {
+        // create a new post using the request data and save to database
+        $this->post()->save($post);
+    }
+
     public function friends()
     {
         return $this->belongsToMany('App\User', 'user_friend', 'user_id', 'friend_id')->withTimestamps();
