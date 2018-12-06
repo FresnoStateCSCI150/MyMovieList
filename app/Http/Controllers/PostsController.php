@@ -18,14 +18,14 @@ class PostsController extends Controller
 
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::latest()->get();
 
     	return view('posts.index', compact('posts'));
     }
 
-    public function show()
+    public function show(Post $post)
     {
-    	return view('posts.show');
+    	return view('posts.show', compact('post'));
     }
 
     public function create()
@@ -40,8 +40,9 @@ class PostsController extends Controller
             'body' => 'required'
         ]);
 
-        // create a new post using the request data and save to database
-        Post::create(request(['title', 'body']));
+        auth()->user()->publish(
+            new Post(request(['title', 'body']))
+        );
 
         // redirect to home page
         return redirect('discussion');

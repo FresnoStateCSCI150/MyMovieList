@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\Movie_Data;
 use App\Movie_Review;
 use Validator;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 
 class PageController extends Controller
 {
@@ -15,9 +17,12 @@ class PageController extends Controller
 	{
 		if (Auth::check())
 		{
-            $mergeReview = $this->userReviews(Auth::user()->id);
+            list($reviews, $recommends) = $this->userReviews(Auth::user()->id);
 
-			return view('home', ['reviews' => $mergeReview, 'userId' => Auth::user()->id]);
+            return view('home', ['reviews' => $reviews,
+                                 'recommends' => $recommends,
+                                 'userId' => Auth::user()->id,
+                                 'friends' => Auth::user()->friends()->get(),]);
 		}
 		else
 			return view('home');
@@ -25,16 +30,85 @@ class PageController extends Controller
 
     public function friendsMovies($friendId)
     {
-        $mergeReview = $this->userReviews($friendId);
-        return view('home', ['reviews' => $mergeReview, 'userId' => $friendId]);
+        $friend = \App\User::find($friendId);
+        if (Gate::allows("go-to-user-reviews", $friendId)) {
+            list($reviews, $recommends) = $this->userReviews($friendId);
+            return view('home', ['reviews' => $reviews,
+                                 'recommends' => $recommends,
+                                 'userId' => $friendId,
+                                 'friends' => $friend->friends()->get(),]);
+        }
+        else {
+            return view("errors/unauthorized");
+        }
     }
 
     private function userReviews($userId)
     {
-        return DB::table('movie_reviews')
+        $reviews = DB::table('movie_reviews')
         ->join('movie_data','movie_data.tmdb_id','=','movie_reviews.tmdb_id')
-        ->select('movie_reviews.review','movie_reviews.user_score', 'movie_data.tmdb_score','movie_data.title','movie_data.img_path', 'movie_data.release', 'movie_data.description')
+        ->select('movie_reviews.id as movie_review_id', 'movie_reviews.review','movie_reviews.user_score', 'movie_data.tmdb_score','movie_data.title','movie_data.img_path', 'movie_data.release', 'movie_data.description')
         ->where('movie_reviews.user_id', $userId)->orderBy('movie_reviews.user_score', 'DESC')->get();
+        $recommends = DB::table('movie_reviews')
+            ->join('movie_data','movie_data.tmdb_id','=','movie_reviews.tmdb_id')
+            ->join('recommends', 'recommends.movie_review_id', '=', 'movie_reviews.id')
+            ->select('movie_reviews.id as movie_review_id',
+                     'movie_reviews.review',
+                     'movie_reviews.user_score',
+                     'movie_data.tmdb_score',
+                     'movie_data.title',
+                     'movie_data.img_path',
+                     'movie_data.release',
+                     'movie_data.description',
+                     'recommends.recommender_id',
+                     'recommends.created_at')
+            ->orderBy('recommends.created_at', 'DESC')
+            ->where('recommends.recommendee_id', $userId)
+            ->get();
+            return [$reviews, $recommends];
+    }
+    public function recommendMovie(Request $request)
+    {
+        $movieReviewId = request('movie_review_id');
+        $validator = Validator::make($request->all(), [
+            'recommendee_id' => [
+                'required',
+                function ($attribute, $value, $fail) use ($movieReviewId) {
+                    $num = DB::table('recommends')->where([
+                        ['recommender_id', '=', Auth::user()->id],
+                        ['recommendee_id', '=', $value],
+                        ['movie_review_id', '=', $movieReviewId],
+                    ])->get();
+                    if ($num->count() > 0) {
+                        $fail('You have already recommended that movie to that friend.');
+                    }
+                },
+            ]
+        ]);
+
+        if ($validator->fails()) {
+            $viewFailure = view('flash-messages/alert-ajax')
+                               ->with('failureMessage', $validator->errors()->first())
+                               ->render();
+            return response()->json([
+                'html' => $viewFailure,
+                'success' => false,
+            ]);
+        }
+
+        $recommender = Auth::user();
+        $recommendeeId = request('recommendee_id');
+
+        $recommendedToOthers = $recommender->belongsToMany('App\User', 'recommends', 'recommender_id', 'recommendee_id')->withTimestamps();
+        $recommendedToOthers->attach($recommendeeId, ['movie_review_id' => request('movie_review_id')]);
+
+        $viewSuccess = view('flash-messages/alert-ajax')
+                               ->with('successMessage', 'You have successfully recommended the movie.')
+                               ->render();
+        return response()->json([
+            'html' => $viewSuccess,
+            'success' => true,
+        ]);
     }
 
 	public function about()

@@ -28,18 +28,34 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function publish(Post $post)
+    {
+        // create a new post using the request data and save to database
+        $this->post()->save($post);
+    }
+
     public function friends()
     {
-        return $this->belongsToMany('App\User', 'user_friend', 'user_id', 'friend_id');
+        return $this->belongsToMany('App\User', 'user_friend', 'user_id', 'friend_id')->withTimestamps();
     }
 
     public function friendRequestsReceived()
     {
-        return $this->belongsToMany('App\User', 'friend_requests', 'receiver_id', 'sender_id');
+        return $this->belongsToMany('App\User', 'friend_requests', 'receiver_id', 'sender_id')->withTimestamps();
     }
 
     public function friendRequestsSent()
     {
-        return $this->belongsToMany('App\User', 'friend_requests', 'sender_id', 'receiver_id');
+        return $this->belongsToMany('App\User', 'friend_requests', 'sender_id', 'receiver_id')->withTimestamps();
+    }
+
+    public function recommendedMovies()
+    {
+        return $this->belongsToMany('App\User', 'recommends', 'recommender_id', 'recomendee_id')->withTimestamps();
     }
 }
