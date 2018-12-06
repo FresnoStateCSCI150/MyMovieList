@@ -17,25 +17,9 @@ class PageController extends Controller
 	{
 		if (Auth::check())
 		{
-            $mergeReview = $this->userReviews(Auth::user()->id);
-            $recommends = DB::table('movie_reviews')
-                ->join('movie_data','movie_data.tmdb_id','=','movie_reviews.tmdb_id')
-                ->join('recommends', 'recommends.movie_review_id', '=', 'movie_reviews.id')
-                ->select('movie_reviews.id as movie_review_id',
-                         'movie_reviews.review',
-                         'movie_reviews.user_score',
-                         'movie_data.tmdb_score',
-                         'movie_data.title',
-                         'movie_data.img_path',
-                         'movie_data.release',
-                         'movie_data.description',
-                         'recommends.recommender_id',
-                         'recommends.created_at')
-                ->orderBy('recommends.created_at', 'DESC')
-                ->where('recommends.recommendee_id', Auth::user()->id)
-                ->get();
+            list($reviews, $recommends) = $this->userReviews(Auth::user()->id);
 
-            return view('home', ['reviews' => $mergeReview,
+            return view('home', ['reviews' => $reviews,
                                  'recommends' => $recommends,
                                  'userId' => Auth::user()->id,
                                  'friends' => Auth::user()->friends()->get(),]);
@@ -46,9 +30,13 @@ class PageController extends Controller
 
     public function friendsMovies($friendId)
     {
+        $friend = \App\User::find($friendId);
         if (Gate::allows("go-to-user-reviews", $friendId)) {
-            $mergeReview = $this->userReviews($friendId);
-            return view('home', ['reviews' => $mergeReview, 'userId' => $friendId]);
+            list($reviews, $recommends) = $this->userReviews($friendId);
+            return view('home', ['reviews' => $reviews,
+                                 'recommends' => $recommends,
+                                 'userId' => $friendId,
+                                 'friends' => $friend->friends()->get(),]);
         }
         else {
             return view("unauthorized");
@@ -57,10 +45,27 @@ class PageController extends Controller
 
     private function userReviews($userId)
     {
-        return DB::table('movie_reviews')
+        $reviews = DB::table('movie_reviews')
         ->join('movie_data','movie_data.tmdb_id','=','movie_reviews.tmdb_id')
         ->select('movie_reviews.id as movie_review_id', 'movie_reviews.review','movie_reviews.user_score', 'movie_data.tmdb_score','movie_data.title','movie_data.img_path', 'movie_data.release', 'movie_data.description')
         ->where('movie_reviews.user_id', $userId)->orderBy('movie_reviews.user_score', 'DESC')->get();
+        $recommends = DB::table('movie_reviews')
+            ->join('movie_data','movie_data.tmdb_id','=','movie_reviews.tmdb_id')
+            ->join('recommends', 'recommends.movie_review_id', '=', 'movie_reviews.id')
+            ->select('movie_reviews.id as movie_review_id',
+                     'movie_reviews.review',
+                     'movie_reviews.user_score',
+                     'movie_data.tmdb_score',
+                     'movie_data.title',
+                     'movie_data.img_path',
+                     'movie_data.release',
+                     'movie_data.description',
+                     'recommends.recommender_id',
+                     'recommends.created_at')
+            ->orderBy('recommends.created_at', 'DESC')
+            ->where('recommends.recommendee_id', $userId)
+            ->get();
+            return [$reviews, $recommends];
     }
     public function recommendMovie(Request $request)
     {
