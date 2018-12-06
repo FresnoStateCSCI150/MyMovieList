@@ -15,9 +15,6 @@
 Route::get('/', 'PageController@home');
 Route::get('home','PageController@home');
 Route::get('about','PageController@about');
-Route::get('discussion', 'PostsController@index');
-Route::get('discussion/{post}', 'PostsController@show');
-Route::get('discussion/create', 'PostsController@create');
 Route::get('account','PageController@account');
 
 // Search get and post methods
@@ -29,10 +26,9 @@ Route::post('MovieReview', 'PageController@saveMovieReview');
 // Login and Register
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-
 // Friends functionality
 Route::get('friends', 'FriendsController@friends')->middleware('auth')->name('friends');
+Route::get('friends/{friendId}', 'PageController@friendsMovies')->middleware('auth');
 Route::post('friends/createrequest', 'FriendsController@createFriendRequest')->middleware('auth');
 Route::post('friends/cancelrequest', 'FriendsController@cancelFriendRequest')->middleware('auth');
 Route::post('friends/create', 'FriendsController@createFriendship')->middleware('auth');
@@ -42,3 +38,13 @@ Route::post('friends/delete', 'FriendsController@deleteFriendship')->middleware(
 // User functionality
 Route:: get('profile', 'UserController@profile');
 Route:: post('profile', 'UserController@update_avatar');
+
+// Discussion and Comments functionality
+Route::get('/discussion', 'PostsController@index');
+Route::get('/discussion/{post}', 'PostsController@show');
+Route::get('/discussion/create', 'PostsController@create');
+Route::post('/discussion', 'PostsController@store');
+Route::post('/discussion/{post}/comments', 'CommentsController@index');
+
+// Recommend functionality
+Route::post('recommends/create', 'PageController@recommendMovie');

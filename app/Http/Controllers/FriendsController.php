@@ -8,6 +8,7 @@ use App\Rules\FriendRequestUnique;
 use App;
 use App\Rules\FriendRequestExists;
 use App\Rules\FriendshipExists;
+use Validator;
 
 class FriendsController extends Controller
 {
@@ -26,7 +27,8 @@ class FriendsController extends Controller
         // Create a new friend request
         $sender->friendRequestsSent()->attach($receiverId);
 
-        return redirect()->route('friends');
+        request()->session()->flash("requestSuccess", "You have successfully made the friend request.");
+        return redirect()->route("friends");
     }
 
     public function cancelFriendRequest()
@@ -51,6 +53,8 @@ class FriendsController extends Controller
         $sender->friends()->attach($receiver->id);
         $receiver->friends()->attach($sender->id);
         $sender->friendRequestsSent()->detach($receiver->id);
+
+        request()->session()->flash("friendSuccess", "You are now friends.");
 
         return redirect()->route('friends');
     }
@@ -78,22 +82,40 @@ class FriendsController extends Controller
 
         $sender->friendRequestsSent()->detach($receiver->id);
 
+        if ($userType == "receiver" ) {
+            request()->session()->flash("declineSuccess", "You have successfully declined the friend request.");
+        }
+        else if ($userType == "sender") {
+            request()->session()->flash("cancelSuccess", "You have successfully canceled the friend request.");
+        }
+
         return redirect()->route('friends');
     }
 
-    public function deleteFriendship()
+    public function deleteFriendship(Request $request)
     {
-        $this->validate(request(), [
+        $validatedData = Validator::make($request->all(), [
             'toDeleteId' => new FriendshipExists,
         ]);
 
+        if ($validatedData->fails()) {
+            $viewFailure = view("flash-messages/alert-ajax")
+                               ->with("failureMessage", "You are not friends with this user.")
+                               ->render();
+            return response()->json([
+                "html" => $viewFailure,
+                "success" => false,
+            ]);
+        }
+
         $deleter = Auth::user();
-        $deletee = App\User::find((int)request('toDeleteId'));
+        $deletee = App\User::find(request('toDeleteId'));
 
         $deleter->friends()->detach($deletee->id);
         $deletee->friends()->detach($deleter->id);
 
-        return redirect()->route('friends');
+        return response()->json(["success" => true]);
+        //return redirect()->route('friends');
     }
 
 	// Return a page which shows a list of the logged in user's friends.
