@@ -9,6 +9,8 @@
 
     {{-- if user is logged in, these become available --}}
     @if (Auth::check())
+
+    {{-- general links --}}
     <ul class="navbar-nav navbar-left">
       <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
       <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
@@ -16,6 +18,8 @@
       <li class="nav-item"><a class="nav-link" href="/discussion">Discussions</a></li>
       <li class="nav-item"><a class="nav-link" href="https://github.com/FresnoStateCSCI150/MyMovieList">GitHub</a></li>
     </ul>
+
+    {{-- user profile dropdown menu --}}
     <ul class="navbar-nav navbar-left">
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="/account"> <img src="/uploads/avatars/{{ Auth::user()->avatar }}" style="width:32px; height:32px; position:absolute; top:5px; left:-40px; border-radius:50%"> {{ Auth::user()->name }} </a>
@@ -30,6 +34,8 @@
         </div>
       </li>
     </ul>
+
+    {{-- if user is not logged in, these are available --}}
     @else
     <ul class="navbar-nav navbar-left">
       <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
