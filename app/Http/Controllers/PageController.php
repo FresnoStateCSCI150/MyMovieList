@@ -39,7 +39,7 @@ class PageController extends Controller
                                  'friends' => $friend->friends()->get(),]);
         }
         else {
-            return view("unauthorized");
+            return view("errors/unauthorized");
         }
     }
 

@@ -1,4 +1,4 @@
-@extends ('template')
+@extends ('templates/master')
 
 @section ('content')
 
@@ -6,7 +6,7 @@
 	
 	<hr>
 
-	<a class="btn btn-primary" href="discussion/create" role="button">Create a post</a>
+	<a class="btn btn-primary" href="/discussion/create" role="button">Create a post</a>
 
 	<hr>
 
@@ -17,7 +17,5 @@
 		@endforeach
 
 	</div>
-
-	<hr>
 
 @endsection

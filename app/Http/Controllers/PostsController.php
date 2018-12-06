@@ -40,8 +40,9 @@ class PostsController extends Controller
             'body' => 'required'
         ]);
 
-        // create a new post using the request data and save to database
-        Post::create(request(['title', 'body']));
+        auth()->user()->publish(
+            new Post(request(['title', 'body']))
+        );
 
         // redirect to home page
         return redirect('discussion');
