@@ -21,9 +21,16 @@
                              </div>
                          </div>
                      </div>
-
 			</div>
 		</div>
 	</div>
+	<hr>
+	<div class ="container">
+		<div class="row">
+			<a class="btn btn-primary" href="/friends" role="button">Friends</a>
+		</div>
+	</div>
+
+
 
 @endsection
