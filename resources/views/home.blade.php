@@ -52,8 +52,13 @@
                                         <table class='table table-bordered'>
                                             <thead>
                                             <tr>
-                                                <th scope='col' style='width: 12%'>My Score</th>
-                                                <th scope='col'>My Review</th>
+                                                @if ($userId == Auth::user()->id)
+                                                    <th scope='col' style='width: 12%'>My Score</th>
+                                                    <th scope='col'>My Review</th>
+                                                @else
+                                                    <th scope='col' style='width: 12%'>{{ \App\User::find($userId)->name }}'s Score</th>
+                                                    <th scope='col'>{{ \App\User::find($userId)->name }}'s Review</th>
+                                                @endif
                                             </tr>
                                             </thead>
 
@@ -64,25 +69,28 @@
                                             </tr>
                                             </tbody>
                                         </table>
+                                        
+                                        @if ($userId == Auth::user()->id)
+                                            <button id={{ 'recommend_button_'.$review->movie_review_id }} onclick="showRecommendForm({{ $review->movie_review_id }})" class='btn btn-primary mb-2'>Recommend to a friend</button>
+                                            <form class='form-inline' id={{ 'recommend_form_'.$review->movie_review_id }} style='display: none'>
+                                                <label class='sr-only' for='recommendee_id'>Name</label>
+                                                <select class='custom-select mb-2 mr-sm-2' id={{ 'recommendee_id_'.$review->movie_review_id }} name='recommendee_id' required>
+                                                    @foreach ($friends as $friend)
+                                                        <option value='{{ $friend->id }}'>{{ $friend->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <input value='{{ $review->movie_review_id }}' id='movie_review_id' name='movie_review_id' style='display: none'>
 
-                                        <button id={{ 'recommend_button_'.$review->movie_review_id }} onclick="showRecommendForm({{ $review->movie_review_id }})" class='btn btn-primary mb-2'>Recommend to a friend</button>
-                                        <form class='form-inline' id={{ 'recommend_form_'.$review->movie_review_id }} style='display: none'>
-                                            <label class='sr-only' for='recommendee_id'>Name</label>
-                                            <select class='custom-select mb-2 mr-sm-2' id={{ 'recommendee_id_'.$review->movie_review_id }} name='recommendee_id' required>
-                                                @foreach ($friends as $friend)
-                                                    <option value='{{ $friend->id }}'>{{ $friend->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            <input value='{{ $review->movie_review_id }}' id='movie_review_id' name='movie_review_id' style='display: none'>
+                                                <button type='button' class='btn btn-danger mb-2' onclick="hideRecommendForm({{ $review->movie_review_id }})">Cancel</button>
+                                                <button type='button' class='btn btn-primary mb-2 ml-2' onclick="recommendMovie({{ $review->movie_review_id }})">Recommend</button>
 
-                                            <button type='button' class='btn btn-danger mb-2' onclick="hideRecommendForm({{ $review->movie_review_id }})">Cancel</button>
-                                            <button type='button' class='btn btn-primary mb-2 ml-2' onclick="recommendMovie({{ $review->movie_review_id }})">Recommend</button>
+                                            </form>
+                                            <div id={{ 'recommend_message_'.$review->movie_review_id }}></div>
 
-                                        </form>
-                                        <div id={{ 'recommend_message_'.$review->movie_review_id }}></div>
+                                            @include ("errors/fielderrors", ["fieldName" => "recommendee_id"])
+                                            @include ("flash-messages/success", ["successVar" => "recommendSuccess"])
+                                        @endif
 
-                                        @include ("errors/fielderrors", ["fieldName" => "recommendee_id"])
-                                        @include ("flash-messages/success", ["successVar" => "recommendSuccess"])
                                         </div>
                                         </div>
                                         </div>
