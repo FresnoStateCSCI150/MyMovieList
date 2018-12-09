@@ -1,4 +1,4 @@
-@extends ('template')
+@extends ('templates/master')
 
 @section ('content')
 
@@ -20,6 +20,8 @@
                                 <div class='card shadow-sm bg-white rounded'>
                                     <h4 class='card-header'>{{ __('Your Top 10 Movies') }}</h4>
                                     <div class='card-body'>
+
+                                        @if(count($reviews))
                                         @foreach($reviews as $review)
 
                                         <div class='container mb-5'>
@@ -87,13 +89,17 @@
                                             </form>
                                             <div id={{ 'recommend_message_'.$review->movie_review_id }}></div>
 
-                                            @include ("fielderrors", ["fieldName" => "recommendee_id"])
+                                            @include ("errors/fielderrors", ["fieldName" => "recommendee_id"])
                                             @include ("flash-messages/success", ["successVar" => "recommendSuccess"])
                                         @endif
+
                                         </div>
                                         </div>
                                         </div>
                                         @endforeach
+                                        @else
+                                            <h6>No top movies.</h6>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -104,6 +110,8 @@
                                 <div class='card shadow-sm bg-white rounded'>
                                     <h4 class='card-header'>{{ __('Recommended Movies') }}</h4>
                                     <div class='card-body'>
+
+                                        @if(count($recommends))
                                         @foreach($recommends as $recommend)
 
                                         <div class='container mb-5'>
@@ -113,7 +121,7 @@
                                         </div>
 
                                         <div class='col-9'>
-                                        <h5>Recommended by {{ \App\User::find($recommend->recommender_id)->name }}</h5>
+                                        <h5>Recommended by <a href="/friends/{{ \App\User::find($recommend->recommender_id)->id }}">{{ \App\User::find($recommend->recommender_id)->name }}</a></h5>
                                         <table class='table table-bordered'>
                                             <thead>
                                             <tr>
@@ -137,7 +145,7 @@
                                         <table class='table table-bordered'>
                                             <thead>
                                             <tr>
-                                                <th scope='col' style='width: 12%'>{{ \App\User::find($recommend->recommender_id)->name }}'s Score</th>
+                                                <th scope='col' style='width: 13%'>{{ \App\User::find($recommend->recommender_id)->name }}'s Score</th>
                                                 <th scope='col'>{{ \App\User::find($recommend->recommender_id)->name }}'s Review</th>
                                             </tr>
                                             </thead>
@@ -153,8 +161,20 @@
                                         </div>
                                         </div>
                                         @endforeach
+                                        @else
+                                            <h6>No recommended movies.</h6>
+                                        @endif
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        {{-- if the user has no reviews and no recommends, display hint --}}
+                        <div class='row justify-content-center mt-4'>
+                            <div class='col-md'>
+                                @if(count($reviews) == 0 && count($recommends) == 0)
+                                    <h3>Get started by searching for a movie and writing a review!</h3>
+                                @endif
                             </div>
                         </div>
 
@@ -165,7 +185,7 @@
                     <h1>Welcome to MyMovieList!</h1>
                     <h2>Please register or login!</h2>
                     <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mt-5">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('Login') }}</div>

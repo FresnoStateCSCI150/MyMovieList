@@ -1,4 +1,4 @@
-@extends ("template")
+@extends ("templates/master")
 
 @section ("content")
 
@@ -17,8 +17,8 @@
 
             <button type="submit" class="btn btn-primary mb-2">Send Friend Request</button>
 
-            @include ("fielderrors", ["fieldName" => "name"])
-            @include ("flash-messages/success", ["successVar" => "requestSuccess"])
+        @include ("errors/fielderrors", ["fieldName" => "name"])
+        @include ("flash-messages/success", ["successVar" => "requestSuccess"])
 
         </form>
 
@@ -40,9 +40,9 @@
             <button type="submit" class="btn btn-primary mb-2">Accept Friend Request</button>
             <button type="submit" class="btn btn-primary mb-2 ml-2" onclick="changeToDecline()">Decline Friend Request</button>
 
-            @include ("fielderrors", ["fieldName" => "id"])
-            @include ("flash-messages/success", ["successVar" => "friendSuccess"])
-            @include ("flash-messages/success", ["successVar" => "declineSuccess"])
+        @include ("errors/fielderrors", ["fieldName" => "id"])
+        @include ("flash-messages/success", ["successVar" => "friendSuccess"])
+        @include ("flash-messages/success", ["successVar" => "declineSuccess"])
 
         </form>
         <script type="text/javascript">
@@ -74,8 +74,8 @@
 
             <button type="submit" class="btn btn-primary mb-2">Cancel Friend Request</button>
 
-            @include ("fielderrors", ["fieldName" => "receiver_id"])
-            @include ("flash-messages/success", ["successVar" => "cancelSuccess"])
+        @include ("errors/fielderrors", ["fieldName" => "receiver_id"])
+        @include ("flash-messages/success", ["successVar" => "cancelSuccess"])
 
         </form>
         @else
@@ -130,7 +130,7 @@
             }
         </script>
         @else
-        <h3>You currently have no friends.</h3>
+        <h3>You currently have no friends 😞</h3>
         @endif
     </div>
 </div>

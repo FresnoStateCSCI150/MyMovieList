@@ -1,4 +1,4 @@
-@extends ('template')
+@extends ('templates/master')
 
 @section ('content')
 
@@ -91,36 +91,40 @@
 				'description': currentMovie['overview']
 			}
 			JsonStrings[i] = data;
-			visbleAddMovieButton(true, currentMovie['id']);
+			visbleAddMovieButton(true, false, currentMovie['id']);
 		}
 	}
 
-	function visbleAddMovieButton(on, id){
+	function visbleAddMovieButton(first, second, id){
 		$("#theButtons"+ id).empty();
 		var buttonText = "";
-		if (on) {
+		if (first) 
+		{
 			buttonText = "<button onclick=\"appendForm(" + id + ")\" class=\"btn btn-primary\">Add Movie</button>";
 			$("#theButtons"+id).append(buttonText);
-		} else {
-			buttonText = "<button onclick=\"cancelReview(" + id + ")\" class=\"btn btn-danger\">Cancel</button><button onclick=\"confirmReview(" + id + ")\" class=\"btn btn-primary\">Submit Review</button>";
+		} 
+		else if (second)
+		{
+			buttonText = "<button onclick=\"confirmReview(" + id + ")\" class=\"mr-2 btn btn-primary\">Submit Review</button><button onclick=\"cancelReview(" + id + ")\" class=\"btn btn-danger\">Cancel</button>";
+
 			$("#theButtons"+id).append(buttonText);
 		}
 	}
 
 	function appendForm(id) {
-		var movieReviewText = "<x-star-rating id=\"starRating"+id+"\" value=\"5\" number=\"10\"></x-star-rating><div class=\"form-group\"><label for=\"review\">Your Review:</label><textarea class=\"form-control\" id=\"review"+id+"\" rows=\"3\"></textarea></div>";
+		var movieReviewText = "<x-star-rating id=\"starRating"+id+"\" value=\"0\" number=\"10\"></x-star-rating><div class=\"form-group\"><label for=\"review\">Your Review:</label><textarea class=\"form-control\" id=\"review"+id+"\" rows=\"3\"></textarea></div>";
 		$('#div' + id).append(movieReviewText);
-		visbleAddMovieButton(false, id);
+		visbleAddMovieButton(false, true, id);
 	}
 
 	function cancelReview(id) {
 		$('#div' + id).empty();
-		visbleAddMovieButton(true, id);
+		visbleAddMovieButton(true, false, id);
 	}
 
 	function submittedReviewResponse(id, message) {
 		cancelReview(id);
-		visbleAddMovieButton(false, id);
+		visbleAddMovieButton(false, false, id);
 		$('#div' + id).append("<p style=\"color:red;\">" + message + "</p>");
 	}
 
