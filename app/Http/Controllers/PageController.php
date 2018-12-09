@@ -64,18 +64,30 @@ class PageController extends Controller
     }
     public function recommendMovie(Request $request)
     {
-        $movieReviewId = request('movie_review_id');
+		$movieReviewId = request('movie_review_id');
         $validator = Validator::make($request->all(), [
             'recommendee_id' => [
+				'bail',
                 'required',
                 function ($attribute, $value, $fail) use ($movieReviewId) {
                     $num = DB::table('recommends')->where([
                         ['recommender_id', '=', Auth::user()->id],
                         ['recommendee_id', '=', $value],
                         ['movie_review_id', '=', $movieReviewId],
-                    ])->get();
-                    if ($num->count() > 0) {
+                    ])->get()->count();
+                    if ($num > 0) {
                         $fail('You have already recommended that movie to that friend.');
+                    }
+                },
+                function ($attribute, $value, $fail) use ($movieReviewId) {
+					$tmdbId = DB::table('movie_reviews')->find($movieReviewId)->tmdb_id;
+					$num = DB::table('movie_reviews')
+						->where('user_id', $value)
+						->where('tmdb_id', $tmdbId)
+						->get()
+						->count();
+                    if ($num > 0) {
+                        $fail("You can't recommend to a friend a movie they've already reviewed.");
                     }
                 },
             ]
