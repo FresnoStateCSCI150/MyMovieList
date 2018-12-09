@@ -15,10 +15,16 @@ class FriendsController extends Controller
 	public function createFriendRequest()
 	{
         $this->validate(request(), [
-            'name' => 'exists:users'
-        ]);
-        $this->validate(request(), [
-            'name' => new FriendRequestUnique
+            'name' => [
+                'bail',
+                'exists:users',
+                new FriendRequestUnique,
+                function ($attribute, $value, $fail) {
+                    if ($value == Auth::user()->name) {
+                        $fail("You can't send a friend request to yourself!");
+                    }
+                },
+            ]
         ]);
 
         $sender = Auth::user();
