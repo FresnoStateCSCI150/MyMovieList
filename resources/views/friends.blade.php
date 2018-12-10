@@ -129,10 +129,12 @@
                 });
             }
         </script>
+
         @else
         <h3>You currently have no friends 😞</h3>
         @endif
     </div>
 </div>
 </div>
+
 @endsection
