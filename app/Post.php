@@ -4,7 +4,7 @@ namespace App;
 
 class Post extends Model
 {
-    protected $fillable = ['user_id'];
+    protected $fillable = ['user_id', 'title', 'body'];
 
     public function comments()
     {
