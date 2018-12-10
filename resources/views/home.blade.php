@@ -173,7 +173,7 @@
                         <div class='row justify-content-center mt-4'>
                             <div class='col-md'>
                                 @if(count($reviews) == 0 && count($recommends) == 0)
-                                    <h3>Get started by searching for a movie and writing a review!</h3>
+                                    <h3>Get started by searching for a movie and writing a review! 😃</h3>
                                 @endif
                             </div>
                         </div>

@@ -5,25 +5,29 @@
 	<div class="col-sm-8">
 
 		{{-- original poster --}}
-		<div class='container'>
-    		<div class='row mb-3'>
-        		<div class='col-md'>
-            		<div class='card shadow-sm bg-white rounded'>
-            			<div class='card-header'>
+		<div class="container">
+    		<div class="row mb-3">
+        		<div class="col-md">
+            		<div class="card shadow-sm bg-white rounded">
+            			<div class="card-header">
             				<h1>{{ $post->title }}</h1>
             				<hr>
-            				<div class='row'>
-            					<div class='col'>
+            				<div class="row">
+            					<div class="col- ml-2 d-flex align-items-center">
+            						<img src="/uploads/avatars/{{ $post->user->avatar }}" style="width:px; height:32px; position:relative; border-radius:50%">
+            					</div>
+            					<div class="col d-flex align-items-center">
             						<h6><strong>{{ $post->user->name }}</strong></h6>
             					</div>
-            					<div class="w-200"></div>
-            					<div class='col'>
-            						<h6 class="text-right"><strong>{{ $post->created_at->diffForHumans() }}</strong> &nbsp; {{ $post->created_at->tz('America/Los_Angeles')->toDayDateTimeString() }}</h6>
+            					<div class="col d-flex align-items-center justify-content-end">
+            						<h6><strong>{{ $post->created_at->diffForHumans() }}</strong>
+            						&nbsp; ⁝ &nbsp;
+            						{{ $post->created_at->tz('America/Los_Angeles')->toDayDateTimeString() }}</h6>
             					</div>
             				</div>
 
             			</div>
-                		<div class='card-body'>
+                		<div class="card-body">
 							{{ $post->body }}
 						</div>
 					</div>
@@ -34,22 +38,28 @@
 		{{-- List of available comments --}}
 		@if(count($post->comments))
 		@foreach ($post->comments as $comment)
-		<div class='container'>
-    		<div class='row mb-3'>
-        		<div class='col-md'>
-            		<div class='card shadow-sm bg-white rounded'> 
-            			<div class='card-header'>
-            				<div class='row'>
-            					<div class='col'>
+		<div class="container">
+    		<div class="row mb-3">
+        		<div class="col-md">
+            		<div class="card shadow-sm bg-white rounded"> 
+            			<div class="card-header">
+            				<div class="row">
+            					<div class="col- ml-2 d-flex align-items-center">
+            						<img src="/uploads/avatars/{{ $comment->user->avatar }}" style="width:px; height:32px; position:relative; border-radius:50%">
+            					</div>
+            					<div class="col d-flex align-items-center">
             						<h6><strong>{{ $comment->user->name }}</strong></h6>
             					</div>
-            					<div class="w-200"></div>
-            					<div class='col'>
-            						<h6 class="text-right"><strong>{{ $comment->created_at->diffForHumans() }}</strong> &nbsp; {{ $comment->created_at->tz('America/Los_Angeles')->toDayDateTimeString() }}</h6>
+            					<div class="col d-flex align-items-center justify-content-end">
+            						<h6>
+            							<strong>{{ $comment->created_at->diffForHumans() }}</strong> 
+            							&nbsp; ⁝ &nbsp;
+            							{{ $comment->created_at->tz('America/Los_Angeles')->toDayDateTimeString() }}
+            						</h6>
             					</div>
             				</div>
-            			</div>            			
-                		<div class='card-body'>
+            			</div>	
+                		<div class="card-body">
 							{{ $comment->body }}
 						</div>
 					</div>
