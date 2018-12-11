@@ -19,9 +19,9 @@
                             <div class='col-md'>
                                 <div class='card shadow-sm bg-white rounded'>
                                     @if ($userId == Auth::user()->id)
-                                        <h4 class='card-header'>{{ __('Your Top 10 Movies') }}</h4>
+                                        <h4 class='card-header'>{{ __('Your Reviewed Movies') }}</h4>
                                     @else 
-                                        <h4 class='card-header'>{{ \App\User::find($userId)->name }}'s Top 10 Movies</h4>
+                                        <h4 class='card-header'>{{ \App\User::find($userId)->name }}'s Reviewed Movies</h4>
                                     @endif
                                     <div class='card-body'>
 
