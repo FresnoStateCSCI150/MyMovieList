@@ -50,13 +50,15 @@ class PageController extends Controller
             ->select('movie_reviews.id as movie_review_id',
                      'movie_reviews.review',
                      'movie_reviews.user_score',
+                     'movie_reviews.tmdb_id',
                      'movie_data.tmdb_score',
                      'movie_data.title',
                      'movie_data.img_path',
                      'movie_data.release',
                      'movie_data.description',
                      'recommends.recommender_id',
-                     'recommends.created_at')
+                     'recommends.created_at',
+                 	'recommends.id as r_id')
             ->orderBy('recommends.created_at', 'DESC')
             ->where('recommends.recommendee_id', $userId)
             ->get();
@@ -153,6 +155,9 @@ class PageController extends Controller
 			$Review->user_score = $request->user_score;
 			$Review->review = $request->user_review;
 			if($Review->save()) {
+				if(request('r_id')) {
+					DB::table('recommends')->where('id',request('r_id'))->delete();
+				}
 				return response()->json([
 					'success' => 'Review saved!'
 				]);
@@ -164,6 +169,7 @@ class PageController extends Controller
 			]);
 		}
 	}
+
 	public function saveMovieData(Request $request){
 		$validatedData = Validator::make($request->all(), [
 			'tmdb_id' => 'required|unique:movie_data'

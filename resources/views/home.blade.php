@@ -162,20 +162,23 @@
                                             </tbody>
                                         </table>
                                         <!--Submit Review-->
+                                        @if ($userId == Auth::user()->id)
                                         <button id={{ 'recommended_review_button_'.$recommend->movie_review_id }} onclick="showRecommendReviewForm({{ $recommend->movie_review_id }})" class='btn btn-primary mb-2'>Review Movie</button>
                                         <div id="review_for_{{ $recommend->movie_review_id }}">
                                         <x-star-rating id="starRating_{{ $recommend->movie_review_id }}" value="0" number="10"></x-star-rating><div class="form-group"><label for="review">Your Review:</label><textarea class="form-control" id="recommended_review_form_{{ $recommend->movie_review_id }}" rows="3"></textarea>
-                                        <button id={{ 'submit_review_button_'.$recommend->movie_review_id }} onclick="submit_reivew({{ $recommend->movie_review_id }})" class='btn btn-primary mb-2'>Submit Review</button>
+                                        <button id={{ 'submit_review_button_'.$recommend->movie_review_id }} onclick="submit_reivew({{ Auth::user()->id}},{{ $recommend->movie_review_id }}, {{ $recommend->r_id }}, {{ $recommend->tmdb_id }})" class='btn btn-primary mb-2'>Submit Review</button>
                                         <button id={{ 'cancel_review_button_'.$recommend->movie_review_id }} onclick="hideRecommendReviewForm({{ $recommend->movie_review_id }})" class='btn btn-primary mb-2 btn btn-danger'>Cancel Review</button>
-                                        </div>
-                                        </div>
-                                        </div>
                                         </div>
                                         </div>
                                         <script type="text/javascript">
                                             var recommendForm = $('#review_for_'+{{ $recommend->movie_review_id }});
                                             recommendForm.hide();
                                         </script>
+                                        @endif
+                                        <!-- End Submit Review-->
+                                        </div>
+                                        </div>
+                                        </div>
                                         @endforeach
                                         @else
                                             <h6>No recommended movies.</h6>
@@ -278,9 +281,11 @@
 
     <script type='text/javascript'>
 
+        //toggle recommend review
         function showRecommendReviewForm(id) {
             var recommendButton = $('#recommended_review_button_'+id);
             var recommendForm = $('#review_for_'+id);
+            console.log(id);
             recommendButton.hide();
             recommendForm.show();
         };
@@ -292,7 +297,39 @@
             recommendForm.hide();
         };
 
+        function submit_reivew(user,id, r_id, tmdb_id){
+            $.ajaxSetup({
+                headers: {
+                    "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content")
+                }
+            });
 
+            var movRevData = {
+                'user_id': user,
+                'tmdb_id':tmdb_id,
+                'user_score': $('#starRating_'+id).val(),
+                'user_review': $('#recommended_review_form_'+id).val(),
+                'r_id': r_id
+            }
+
+            console.log(movRevData);
+            $.ajaxSetup({
+                headers: {
+                    "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content")
+                }
+            });
+            $.ajax({type: "POST",
+                    url: "/MovieReview",
+                    data: movRevData,
+                    success: function (data) {
+                        location.reload();
+                    },
+                    error: function (errorData) {
+                        console.log(errorData);
+                    },
+                    dataType: "json",
+            });
+        };
         //Recommend to a friend
         function showRecommendForm(id) {
             var recommendButton = $('#recommend_button_'+id);
