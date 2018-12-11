@@ -123,7 +123,9 @@ class PageController extends Controller
 	}
 	public function search()
 	{
-		return view('search');
+		if (Auth::check()) return view('search');
+		else
+			return view('home');
 	}
 	public function getTMDBjson(Request $request) {
 		$searchString = $request->input('data');
