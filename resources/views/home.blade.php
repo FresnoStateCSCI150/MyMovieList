@@ -102,7 +102,7 @@
                                         </div>
                                         @endforeach
                                         @else
-                                            <h6>No top movies.</h6>
+                                            <h6>No reviewed movies.</h6>
                                         @endif
                                     </div>
                                 </div>
