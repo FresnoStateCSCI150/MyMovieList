@@ -18,7 +18,11 @@
                         <div class='row justify-content-center mb-3'>
                             <div class='col-md'>
                                 <div class='card shadow-sm bg-white rounded'>
-                                    <h4 class='card-header'>{{ __('Your Top 10 Movies') }}</h4>
+                                    @if ($userId == Auth::user()->id)
+                                        <h4 class='card-header'>{{ __('Your Top 10 Movies') }}</h4>
+                                    @else 
+                                        <h4 class='card-header'>{{ \App\User::find($userId)->name }}'s Top 10 Movies</h4>
+                                    @endif
                                     <div class='card-body'>
 
                                         @if(count($reviews))
@@ -157,9 +161,21 @@
                                             </tr>
                                             </tbody>
                                         </table>
+                                        <!--Submit Review-->
+                                        <button id={{ 'recommended_review_button_'.$recommend->movie_review_id }} onclick="showRecommendReviewForm({{ $recommend->movie_review_id }})" class='btn btn-primary mb-2'>Review Movie</button>
+                                        <div id="review_for_{{ $recommend->movie_review_id }}">
+                                        <x-star-rating id="starRating_{{ $recommend->movie_review_id }}" value="0" number="10"></x-star-rating><div class="form-group"><label for="review">Your Review:</label><textarea class="form-control" id="recommended_review_form_{{ $recommend->movie_review_id }}" rows="3"></textarea>
+                                        <button id={{ 'submit_review_button_'.$recommend->movie_review_id }} onclick="submit_reivew({{ $recommend->movie_review_id }})" class='btn btn-primary mb-2'>Submit Review</button>
+                                        <button id={{ 'cancel_review_button_'.$recommend->movie_review_id }} onclick="hideRecommendReviewForm({{ $recommend->movie_review_id }})" class='btn btn-primary mb-2 btn btn-danger'>Cancel Review</button>
                                         </div>
                                         </div>
                                         </div>
+                                        </div>
+                                        </div>
+                                        <script type="text/javascript">
+                                            var recommendForm = $('#review_for_'+{{ $recommend->movie_review_id }});
+                                            recommendForm.hide();
+                                        </script>
                                         @endforeach
                                         @else
                                             <h6>No recommended movies.</h6>
@@ -261,6 +277,23 @@
 
 
     <script type='text/javascript'>
+
+        function showRecommendReviewForm(id) {
+            var recommendButton = $('#recommended_review_button_'+id);
+            var recommendForm = $('#review_for_'+id);
+            recommendButton.hide();
+            recommendForm.show();
+        };
+
+        function hideRecommendReviewForm(id) {
+            var recommendButton = $('#recommended_review_button_'+id);
+            var recommendForm = $('#review_for_'+id);
+            recommendButton.show();
+            recommendForm.hide();
+        };
+
+
+        //Recommend to a friend
         function showRecommendForm(id) {
             var recommendButton = $('#recommend_button_'+id);
             var recommendForm = $('#recommend_form_'+id);
@@ -305,6 +338,77 @@
                     dataType: "json",
             });
         }
+
+        //Stars 
+        class StarRating extends HTMLElement {
+            get value () {
+                return this.getAttribute('value') || 0;
+            }
+
+            set value (val) {
+                this.setAttribute('value', val);
+                this.highlight(this.value - 1);
+            }
+
+            get number () {
+                return this.getAttribute('number') || 5;
+            }
+
+            set number (val) {
+                this.setAttribute('number', val);
+
+                this.stars = [];
+
+                while (this.firstChild) {
+                    this.removeChild(this.firstChild);
+                }
+
+                for (let i = 0; i < this.number; i++) {
+                    let s = document.createElement('div');
+                    s.className = 'star';
+                    this.appendChild(s);
+                    this.stars.push(s);
+                }
+
+                this.value = this.value;
+            }
+
+            highlight (index) {
+                this.stars.forEach((star, i) => {
+                    star.classList.toggle('full', i <= index);
+                });
+            }
+
+            constructor () {
+                super();
+
+                this.number = this.number;
+
+                this.addEventListener('mousemove', e => {
+                    let box = this.getBoundingClientRect(),
+                        starIndex = Math.floor((e.pageX - box.left) / box.width * this.stars.length);
+
+                    this.highlight(starIndex);
+                });
+
+                this.addEventListener('mouseout', () => {
+                    this.value = this.value;
+                });
+
+                this.addEventListener('click', e => {
+                    let box = this.getBoundingClientRect(),
+                        starIndex = Math.floor((e.pageX - box.left) / box.width * this.stars.length);
+
+                    this.value = starIndex + 1;
+
+                    let rateEvent = new Event('rate');
+                    this.dispatchEvent(rateEvent);
+                });
+            }
+        }
+
+        customElements.define('x-star-rating', StarRating);
+
     </script>
 
 @endsection
