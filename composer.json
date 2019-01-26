@@ -12,8 +12,7 @@
         "intervention/image": "dev-master",
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
-        "sparkpost/php-sparkpost": "^2.1",
-        "sparkpost/sparkpost": "^2.1"
+        "sendgrid/sendgrid": "~7"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

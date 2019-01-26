@@ -15,9 +15,14 @@ return [
     */
 
     'mailgun' => [
-        'domain' => 'sandboxf456890867414257ac462f82954aa718.mailgun.org',
+        'domain' => 'www.mymovielist.co',
         'secret' => '3b0654648ea74e1ab1d64f418a50a318-2d27312c-fcc2da5b',
         'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
+    ],
+
+    'sendgrid' => [
+        'domain' => 'www.mymovielist.co',
+        'secret' => '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',
     ],
 
     'ses' => [
