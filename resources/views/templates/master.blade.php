@@ -4,9 +4,10 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+        <link rel="shortcut icon" href="favicon.ico" />
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>My Movie List</title>
+        <title>MyMovieList</title>
 
         <!-- Fonts -->
         <!-- Styles -->
