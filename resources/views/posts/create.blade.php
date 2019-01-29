@@ -1,5 +1,16 @@
 @extends ('templates/master')
 
+@section ('stylesheets')
+
+	<script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
+
+	<script>	
+		tinymce.init({
+			selector:'textarea'
+		});
+	</script>
+@endsection
+
 @section ('content')
 
 	<div class="col-sm-8">
@@ -29,9 +40,7 @@
 			</div>
 
 			@include('errors/errors')
-
 		</form>
-
 	</div>
 
 @endsection
