@@ -10,6 +10,6 @@
 
 	<p>You can search up movies, rate and review them, and also recommend them to other friends on the same site. Powered by TheMovieDatabase (TMDb) API.</p>
 
-	<p>Crafted with love by Jheovanny, Robert, Steven, and John.</p>
+	<p>Crafted with love by Jheovanny, Robert, Steven, John, and Ernesto.</p>
 
 @endsection
