@@ -82,6 +82,21 @@
                                             <button id={{ 'recommend_button_'.$review->movie_review_id }} onclick="showRecommendForm({{ $review->movie_review_id }})" class='btn btn-primary mb-2'>Recommend to a friend</button>
                                             {{-- Edit Button Default --}}
                                             <button type="button" id={{ 'edit_button_'.$review->movie_review_id }} class='btn btn-danger mb-2 float-right' onclick="showEdit({{$review->movie_review_id}})">Edit</button>
+                                            {{-- Edit Review --}}
+                                            <div id="update_for_{{ $review->movie_review_id }}">
+                                            <x-star-rating id="starRating_{{ $review->movie_review_id }}" value="{{$review->user_score}}" number="10"></x-star-rating>
+
+                                            <div class="form-group"><label for="review">Edit Review:</label><textarea class="form-control" id="edit_review_form_{{ $review->movie_review_id }}" rows="3">{{$review->review}}</textarea></div>
+
+                                            {{-- Cancel and Save Edit Buttons --}}
+                                            <button type="button" id={{ 'save_edit_button_'.$review->movie_review_id }} class='btn btn-primary mb-2 float-left' onclick="saveEdit({{$review->movie_review_id}})">Save</button>
+                                            <button type="button" id={{ 'cancel_button_'.$review->movie_review_id }} class='btn btn-danger mb-2 float-right' onclick="hideEdit({{$review->movie_review_id}})">Cancel</button>
+                                            </div>
+                                            {{-- Hide Edit Review Default --}}
+                                            <script type="text/javascript">
+                                                var updateform = $('#update_for_'+{{ $review->movie_review_id }});
+                                                updateform.hide();
+                                            </script>
                                             {{-- Recommend Movie Form --}}
                                             <form class='form-inline' id={{ 'recommend_form_'.$review->movie_review_id }} style='display: none'>
                                                 <label class='sr-only' for='recommendee_id'>Name</label>
@@ -311,6 +326,22 @@
             var recommendForm = $('#review_for_'+id);
             recommendButton.show();
             recommendForm.hide();
+        };
+
+        function showEdit(id){
+            var updateForm = $('#update_for_'+id);
+            updateForm.show();
+        };
+
+        function hideEdit(id){
+            var updateForm = $('#update_for_'+id);
+            updateForm.hide();
+        };
+
+        //Save edits
+        function saveEdit(id){
+            //TODO: SAVE EDITS
+
         };
 
         function submit_reivew(user,id, r_id, tmdb_id){
