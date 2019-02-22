@@ -89,7 +89,7 @@
                                             <div class="form-group"><label for="review">Edit Review:</label><textarea class="form-control" id="edit_review_form_{{ $review->movie_review_id }}" rows="3">{{$review->review}}</textarea></div>
 
                                             {{-- Cancel and Save Edit Buttons --}}
-                                            <button type="button" id={{ 'save_edit_button_'.$review->movie_review_id }} class='btn btn-primary mb-2 float-left' onclick="saveEdit({{$review->movie_review_id}})">Save</button>
+                                            <button type="button" id={{ 'save_edit_button_'.$review->movie_review_id }} class='btn btn-primary mb-2 float-left' onclick="saveEdit({{$review->movie_review_id}}, {{ Auth::user()->id }})">Save</button>
                                             <button type="button" id={{ 'cancel_button_'.$review->movie_review_id }} class='btn btn-danger mb-2 float-right' onclick="hideEdit({{$review->movie_review_id}})">Cancel</button>
                                             </div>
                                             {{-- Hide Edit Review Default --}}
@@ -107,7 +107,7 @@
                                                 </select>
                                                 <input value='{{ $review->movie_review_id }}' id='movie_review_id' name='movie_review_id' style='display: none'>
 
-                                                {{--Recommend Movie Form Buttons --}}
+                                                {{-- Recommend Movie Form Buttons --}}
                                                 <button type='button' class='btn btn-danger mb-2' onclick="hideRecommendForm({{ $review->movie_review_id }})">Cancel</button>
                                                 <button type='button' class='btn btn-primary mb-2 ml-2' onclick="recommendMovie({{ $review->movie_review_id }})">Recommend</button>
                                             </form>
@@ -316,7 +316,6 @@
         function showRecommendReviewForm(id) {
             var recommendButton = $('#recommended_review_button_'+id);
             var recommendForm = $('#review_for_'+id);
-            console.log(id);
             recommendButton.hide();
             recommendForm.show();
         };
@@ -328,20 +327,33 @@
             recommendForm.hide();
         };
 
+        //Toggle Edit Form
         function showEdit(id){
             var updateForm = $('#update_for_'+id);
+            var editButton = $('#edit_button_'+id);
             updateForm.show();
+            editButton.hide();
         };
 
         function hideEdit(id){
             var updateForm = $('#update_for_'+id);
+            var editButton = $('#edit_button_'+id);
             updateForm.hide();
+            editButton.show();
         };
 
         //Save edits
-        function saveEdit(id){
+        function saveEdit(movie_id, user){
             //TODO: SAVE EDITS
-
+            var starVal = $('#starRating_'+movie_id).val();
+            var newReview = $('#edit_review_form_'+movie_id).val();
+            var editedData = {
+                'user_id': user,
+                'tmdb_id': movie_id,
+                'user_score': starVal,
+                'user_review': newReview
+            };
+            console.log(editedData);
         };
 
         function submit_reivew(user,id, r_id, tmdb_id){
