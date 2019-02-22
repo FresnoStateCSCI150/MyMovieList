@@ -342,20 +342,38 @@
             editButton.show();
         };
 
-        //Save edits
+        //Save edits to review
         function saveEdit(movie_id, user){
             //TODO: SAVE EDITS
             var starVal = $('#starRating_'+movie_id).val();
             var newReview = $('#edit_review_form_'+movie_id).val();
+
             var editedData = {
-                'user_id': user,
-                'tmdb_id': movie_id,
+                'id': movie_id,
                 'user_score': starVal,
                 'user_review': newReview
             };
-            console.log(editedData);
+
+            $.ajaxSetup({
+                headers: {
+                    "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content")
+                }
+            });
+
+            $.ajax({type: "POST",
+                    url: "/EditReview",
+                    data: editedData,
+                    success: function (data) {
+                        location.reload();
+                    },
+                    error: function (errorData) {
+                        console.log(errorData);
+                    },
+                    dataType: "json",
+            });
         };
 
+        //Submit review for recommended movie
         function submit_reivew(user,id, r_id, tmdb_id){
             $.ajaxSetup({
                 headers: {
@@ -377,6 +395,7 @@
                     "X-CSRF-TOKEN": $("meta[name='csrf-token']").attr("content")
                 }
             });
+
             $.ajax({type: "POST",
                     url: "/MovieReview",
                     data: movRevData,

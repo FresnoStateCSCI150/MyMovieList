@@ -9,6 +9,7 @@ use App\Movie_Review;
 use Validator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
+
 class PageController extends Controller
 {
 	public function home()
@@ -64,6 +65,7 @@ class PageController extends Controller
             ->get();
             return [$reviews, $recommends];
     }
+
     public function recommendMovie(Request $request)
     {
 		$movieReviewId = request('movie_review_id');
@@ -115,6 +117,22 @@ class PageController extends Controller
             'success' => true,
         ]);
     }
+
+    //Update Review
+    public function updateReview(Request $request){
+    	$id = request('id');
+    	$user_score = request('user_score');
+    	$user_review = request('user_review');
+
+    	$update = DB::update('update movie_reviews set user_score = ? , review = ? where id = ? ',[$user_score, $user_review, $id]);
+
+    	return response()->json([
+            'success' => $update
+        ]);
+
+    }
+
+    //Page returns
 	public function about()
 	{
 		return view('about');
