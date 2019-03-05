@@ -219,7 +219,74 @@ class PageController extends Controller
 			$MovDat->title = $request->input('title');
 			$MovDat->img_path = $request->input('img_path');
 			$MovDat->release = $request->input('release');
-			$MovDat->description = $request->input('description');
+            $MovDat->description = $request->input('description');
+            $genreIds = $request->input('genre_ids');
+            for ($i=0; $i < count($genreIds); $i++) { 
+                switch ($genreIds[$i]) {
+                    case 28:
+                        $MovDat->action = true;
+                        break;
+                    case 12:
+                        $MovDat->adventure = true;
+                        break;
+                    case 16:
+                        $MovDat->animation = true;
+                        break;
+                    case 35:
+                        $MovDat->comedy = true;
+                        break;
+                    case 80:
+                        $MovDat->crime = true;
+                        break;
+                    case 99:
+                        $MovDat->documentary = true;
+                        break;
+                    case 18:
+                        $MovDat->drama = true;
+                        break;
+                    case 10751:
+                        $MovDat->family = true;
+                        break;
+                    case 14:
+                        $MovDat->fantasy = true;
+                        break;
+                    case 36:
+                        $MovDat->history = true;
+                        break;
+                    case 27:
+                        $MovDat->horror = true;
+                        break;
+                    case 10402:
+                        $MovDat->music = true;
+                        break;
+                    case 9648:
+                        $MovDat->mystery = true;
+                        break;
+                    case 10749:
+                        $MovDat->romance = true;
+                        break;
+                    case 878:
+                        $MovDat->science_fiction = true;
+                        break;
+                    case 10770:
+                        $MovDat->tv_movie = true;
+                        break;
+                    case 53:
+                        $MovDat->thriller = true;
+                        break;
+                    case 10752:
+                        $MovDat->war = true;
+                        break;
+                    case 37:
+                        $MovDat->western = true;
+                        break;
+                    default:
+                        return response()->json([
+                            'genre_error' => 'The genre with id '.$genreIds[$i].' wasn\'t found!',
+                        ]);
+                        break;
+                }
+            }
 			//If successful return sucess!
 			$MovDat->save();
 			return response()->json([
