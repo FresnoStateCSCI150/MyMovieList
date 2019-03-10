@@ -16,6 +16,7 @@ Route::get('/', 'PageController@home');
 Route::get('home','PageController@home');
 Route::get('about','PageController@about');
 Route::get('account','PageController@account');
+Route::get('public/{publicId}', 'PageController@publicProfile');
 
 // Search get and post methods
 Route::get('search', 'PageController@search');

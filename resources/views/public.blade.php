@@ -9,15 +9,15 @@
                     <div class='container'>
                         <div class='row justify-content-between mb-3'>
                             <div class='col-10'>
-                                @if ($userId == Auth::user()->id)
-                                    <h1>Welcome, {{ Auth::user()->name }}!</h1>
-                                @else
-                                    <h1>Welcome to {{ \App\User::find($userId)->name }}'s movie reviews</h1>
-                                @endif
+                                <h1>{{ \App\User::find($userId)->name }}'s public profile</h1>
+                            </div>
+                            <div class='col-2'>
+                                {{-- need to add ability to check if already friend --}}
+                                <button href="#{{-- create friend request --}}" type="submit" class='btn btn-primary mb-2'>Send Friend request</button>
                             </div>                           
                         </div>                                  
-                    </div> 
-                    
+                    </div>                 
+
                     <hr>
 
                     <div class='container'>
@@ -116,90 +116,16 @@
                             </div>
                         </div>
 
-                        <div class='row justify-content-center mb-3'>
-                            <div class='col-md'>
-                                <div class='card shadow-sm bg-white rounded'>
-                                    <h4 class='card-header'>{{ __('Recommended Movies') }}</h4>
-                                    <div class='card-body'>
-
-                                        @if(count($recommends))
-                                        @foreach($recommends as $recommend)
-
-                                        <div class='container mb-5'>
-                                        <div class='row'>
-                                        <div class='col-3'>
-                                                <img src='http://image.tmdb.org/t/p/w200{{$recommend->img_path}}'>
-                                        </div>
-
-                                        <div class='col-9'>
-                                        <h5>Recommended by <a href="/friends/{{ \App\User::find($recommend->recommender_id)->id }}">{{ \App\User::find($recommend->recommender_id)->name }}</a></h5>
-                                        <table class='table table-bordered'>
-                                            <thead>
-                                            <tr>
-                                                <th scope='col' style='width: 13%'>Movie Title</th>
-                                                <th scope='col'>Movie Description</th>
-                                                <th scope='col' style='width: 16%'>Movie Release</th>
-                                                <th scope='col' style='width: 14%'>TMDB Score</th>
-                                            </tr>
-                                            </thead>
-
-                                            <tbody>
-                                            <tr>
-                                                <td>{{$recommend->title}}</td>
-                                                <td>{{$recommend->description}}</td>
-                                                <td>{{$recommend->release}}</td>
-                                                <td>{{$recommend->tmdb_score}}</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-
-                                        <table class='table table-bordered'>
-                                            <thead>
-                                            <tr>
-                                                <th scope='col' style='width: 13%'>{{ \App\User::find($recommend->recommender_id)->name }}'s Score</th>
-                                                <th scope='col'>{{ \App\User::find($recommend->recommender_id)->name }}'s Review</th>
-                                            </tr>
-                                            </thead>
-
-                                            <tbody>
-                                            <tr>
-                                                <td>{{$recommend->user_score}}</td>
-                                                <td>{{$recommend->review}}</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                        <!--Submit Review-->
-                                        @if ($userId == Auth::user()->id)
-                                        <button id={{ 'recommended_review_button_'.$recommend->movie_review_id }} onclick="showRecommendReviewForm({{ $recommend->movie_review_id }})" class='btn btn-primary mb-2'>Review Movie</button>
-                                        <div id="review_for_{{ $recommend->movie_review_id }}">
-                                        <x-star-rating id="starRating_{{ $recommend->movie_review_id }}" value="0" number="10"></x-star-rating><div class="form-group"><label for="review">Your Review:</label><textarea class="form-control" id="recommended_review_form_{{ $recommend->movie_review_id }}" rows="3"></textarea>
-                                        <button id={{ 'submit_review_button_'.$recommend->movie_review_id }} onclick="submit_reivew({{ Auth::user()->id}},{{ $recommend->movie_review_id }}, {{ $recommend->r_id }}, {{ $recommend->tmdb_id }})" class='btn btn-primary mb-2'>Submit Review</button>
-                                        <button id={{ 'cancel_review_button_'.$recommend->movie_review_id }} onclick="hideRecommendReviewForm({{ $recommend->movie_review_id }})" class='btn btn-primary mb-2 btn btn-danger'>Cancel Review</button>
-                                        </div>
-                                        </div>
-                                        <script type="text/javascript">
-                                            var recommendForm = $('#review_for_'+{{ $recommend->movie_review_id }});
-                                            recommendForm.hide();
-                                        </script>
-                                        @endif
-                                        <!-- End Submit Review-->
-                                        </div>
-                                        </div>
-                                        </div>
-                                        @endforeach
-                                        @else
-                                            <h6>No recommended movies.</h6>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         {{-- if the user has no reviews and no recommends, display hint --}}
                         <div class='row justify-content-center mt-4'>
                             <div class='col-md'>
                                 @if(count($reviews) == 0 && count($recommends) == 0)
-                                    <h3>Get started by <a href ="/search">searching</a> for a movie and writing a review! 😃</h3>
+                                    <h3>This user has no reviews.</h3>
+                                    {{-- @if($friends->id) --}}
+                                    {{--     <h3>Recommend your friend some movies. 😊</h3> --}}
+                                    {{-- @else --}}
+                                    {{--     <h3>Add them as a friend to recommend them movies. 😊</h3> --}}
+                                    {{-- @endif --}}
                                 @endif
                             </div>
                         </div>
@@ -207,10 +133,10 @@
                     </div>
 
 
-        @else
-            <h1>Welcome to MyMovieList!</h1>
-            <h2>Please register or login!</h2>
-            <div class="container">
+                @else
+                    <h1>Welcome to MyMovieList!</h1>
+                    <h2>Please register or login!</h2>
+                    <div class="container">
     <div class="row justify-content-center mt-5">
         <div class="col-md-8">
             <div class="card">

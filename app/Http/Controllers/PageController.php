@@ -38,6 +38,36 @@ class PageController extends Controller
             return view("errors/unauthorized");
         }
     }
+
+    public function publicProfile($publicId)
+    {
+        $public = \App\User::find($publicId);
+        //$userId = \App\User::find($user)
+
+        list($reviews, $recommends) = $this->userReviews($publicId);
+
+        /*
+        depending on if the user chooses to view his own profile,
+        it will return his own full home profile,
+        otherwise it will return the limited public profile
+        */
+        $use = '';
+        if ($publicId == Auth::user()->id)
+        {
+            $use .= 'home';
+        }
+        else 
+        {
+            $use .= 'public';
+        }
+
+        // return view based on use
+        return view($use, ['reviews' => $reviews,
+                           'recommends' => $recommends,
+                           'userId' => $publicId,
+                           'friends' => $public->friends()->get(),]);
+    }
+
     private function userReviews($userId)
     {
         $reviews = DB::table('movie_reviews')
