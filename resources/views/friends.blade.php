@@ -147,7 +147,7 @@
     
             @else
             <h3>You currently have no friends. 😞</h3>
-            <h3>Check out the discussion board for some potential new buddies.</h3>
+            <p>Check out the discussion board for some potential new buddies.</p>
             @endif
         </div>
     </div>

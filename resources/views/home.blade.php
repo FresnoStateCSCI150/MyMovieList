@@ -35,55 +35,63 @@
                                         @if(count($reviews))
                                         @foreach($reviews as $review)
 
-                                        <div class='container mb-5'>
-                                        <div class='row'>
-                                        <div class='col-3'>
-                                                <img src='http://image.tmdb.org/t/p/w200{{$review->img_path}}'>
-                                        </div>
+                                        <div class='container-fluid mb-5'>
+                                            <div class='row'>
+                                                <div class='col-3 pb-4'>
+                                                        <img class='img-fluid shadow' src='http://image.tmdb.org/t/p/w200{{$review->img_path}}'>
+                                                </div>
+    
+                                            <div class='col-9'>
+    
+                                            {{-- 'Movie Info' table --}}
+                                            <div class="table-responsive">
+                                                <table class='table table-bordered'>
+                                                <thead>
+                                                <tr>
+                                                    <th scope='col'>Movie Title</th>
+                                                    <th scope='col'>Movie Description</th>
+                                                    <th scope='col'>Movie Release</th>
+                                                    <th scope='col'>TMDB Score</th>
+                                                </tr>
+                                                </thead>
+    
+                                                <tbody>
+                                                <tr>
+                                                    <td>{{$review->title}}</td>
+                                                    <td>{{$review->description}}</td>
+                                                    <td>{{$review->release}}</td>
+                                                    <td>{{$review->tmdb_score}}</td>
+                                                </tr>
+                                                </tbody>
+                                                </table>                                               
+                                            </div>
 
-                                        <div class='col-9'>
-                                        <table class='table table-bordered'>
-                                            <thead>
-                                            <tr>
-                                                <th scope='col' style='width: 13%'>Movie Title</th>
-                                                <th scope='col'>Movie Description</th>
-                                                <th scope='col' style='width: 16%'>Movie Release</th>
-                                                <th scope='col' style='width: 14%'>TMDB Score</th>
-                                            </tr>
-                                            </thead>
-
-                                            <tbody>
-                                            <tr>
-                                                <td>{{$review->title}}</td>
-                                                <td>{{$review->description}}</td>
-                                                <td>{{$review->release}}</td>
-                                                <td>{{$review->tmdb_score}}</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-
-                                        <table class='table table-bordered'>
-                                            <thead>
-                                            <tr>
-                                                @if ($userId == Auth::user()->id)
-                                                    <th scope='col' style='width: 12%'>My Score</th>
-                                                    <th scope='col'>My Review</th>
-                                                @else
-                                                    <th scope='col' style='width: 12%'>{{ \App\User::find($userId)->name }}'s Score</th>
-                                                    <th scope='col'>{{ \App\User::find($userId)->name }}'s Review</th>
-                                                @endif
-                                            </tr>
-                                            </thead>
-
-                                            <tbody>
-                                            <tr>
-                                                <td>{{$review->user_score}}</td>
-                                                <td>{{$review->review}}</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                        
-                                        @if ($userId == Auth::user()->id)
+    
+                                            {{-- 'Your Review' table --}}
+                                            <div class="table-responsive">
+                                                <table class='table table-bordered'>
+                                                <thead>
+                                                <tr>
+                                                    @if ($userId == Auth::user()->id)
+                                                        <th scope='col' style='width: 12%'>My Score</th>
+                                                        <th scope='col'>My Review</th>
+                                                    @else
+                                                        <th scope='col' style='width: 12%'>{{ \App\User::find($userId)->name }}'s Score</th>
+                                                        <th scope='col'>{{ \App\User::find($userId)->name }}'s Review</th>
+                                                    @endif
+                                                </tr>
+                                                </thead>
+    
+                                                <tbody>
+                                                <tr>
+                                                    <td>{{$review->user_score}}</td>
+                                                    <td>{{$review->review}}</td>
+                                                </tr>
+                                                </tbody>
+                                                </table>
+                                            </div>
+                                            
+                                            @if ($userId == Auth::user()->id)
                                             <button id={{ 'recommend_button_'.$review->movie_review_id }} onclick="showRecommendForm({{ $review->movie_review_id }})" class='btn btn-primary mb-2'>Recommend to a friend</button>
                                             <form class='form-inline' id={{ 'recommend_form_'.$review->movie_review_id }} style='display: none'>
                                                 <label class='sr-only' for='recommendee_id'>Name</label>
@@ -102,15 +110,17 @@
 
                                             @include ("errors/fielderrors", ["fieldName" => "recommendee_id"])
                                             @include ("flash-messages/success", ["successVar" => "recommendSuccess"])
-                                        @endif
-
-                                        </div>
-                                        </div>
+                                            @endif
+    
+                                            </div>
+    
+                                            </div>
                                         </div>
                                         @endforeach
                                         @else
                                             <h6>No reviewed movies.</h6>
                                         @endif
+
                                     </div>
                                 </div>
                             </div>
@@ -208,6 +218,24 @@
 
 
         @else
+
+{{-- HTML5 video header --}}
+{{-- might add later for aesthetics --}}
+{{--     <header>
+      <div class="overlay"></div>
+      <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+        <source src="https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4" type="video/mp4">
+      </video>
+      <div class="container h-100">
+        <div class="d-flex h-100 text-center align-items-center">
+          <div class="w-100 text-white">
+            <h1 class="display-3">Video Header</h1>
+            <p class="lead mb-0">With HTML5 Video and Bootstrap 4</p>
+          </div>
+        </div>
+      </div>
+    </header> --}}
+
             <h1>Welcome to MyMovieList!</h1>
             <h2>Please register or login!</h2>
             <div class="container">
@@ -343,6 +371,7 @@
                     dataType: "json",
             });
         };
+        
         //Recommend to a friend
         function showRecommendForm(id) {
             var recommendButton = $('#recommend_button_'+id);

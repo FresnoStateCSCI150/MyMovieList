@@ -42,30 +42,31 @@ class PageController extends Controller
     public function publicProfile($publicId)
     {
         $public = \App\User::find($publicId);
-        //$userId = \App\User::find($user)
 
         list($reviews, $recommends) = $this->userReviews($publicId);
 
         /*
-        depending on if the user chooses to view his own profile,
-        it will return his own full home profile,
+        depending on if the user chooses to view their own profile,
+        it will return their own full home profile,
         otherwise it will return the limited public profile
         */
-        $use = '';
-        if ($publicId == Auth::user()->id)
+
+        // if user is not logged in,
+        // or if public profile doesn't exist,
+        // or if public id matches current user's id, redirect home
+        if (!isset(Auth::user()->id) or !isset($public) or $publicId == Auth::user()->id)
         {
-            $use .= 'home';
-        }
-        else 
-        {
-            $use .= 'public';
+            return redirect('home');
         }
 
-        // return view based on use
-        return view($use, ['reviews' => $reviews,
-                           'recommends' => $recommends,
-                           'userId' => $publicId,
-                           'friends' => $public->friends()->get(),]);
+        // otherwise, return public profile view of other user
+        else 
+        {
+            return view('public', ['reviews' => $reviews,
+                                   'recommends' => $recommends,
+                                   'userId' => $publicId,
+                                   'friends' => $public->friends()->get(),]);
+        }
     }
 
     private function userReviews($userId)

@@ -3,218 +3,152 @@
 @section ('content')
 
     <div class='flex-center position-ref full-height'>
-        @if (Route::has('login'))
-            <div class='top-right links'>
-                @auth
-                    <div class='container'>
-                        <div class='row justify-content-between mb-3'>
-                            <div class='col-10'>
-                                <h1>{{ \App\User::find($userId)->name }}'s public profile</h1>
-                            </div>
-                            <div class='col-2'>
-                                {{-- need to add ability to check if already friend --}}
-                                <button href="#{{-- create friend request --}}" type="submit" class='btn btn-primary mb-2'>Send Friend request</button>
-                            </div>                           
-                        </div>                                  
-                    </div>                 
+        <div class='top-right links'>
+            @auth
+                <div class='container'>
+                    <div class='row justify-content-between mb-3'>
+                        <div class='col-10'>
+                            <h1>{{ $publicUser = \App\User::find($userId)->name}}'s public profile.</h1>
+                        </div>
+                        <div class='col-2'>
 
-                    <hr>
+                            {{-- need to add ability to check if already friend --}}
 
-                    <div class='container'>
+                            {{-- {{ Auth::user()->friends()->get() }} --}}
+                            {{-- {{ \App\User::find($userId) }} --}}
+                            {{-- if current user's friend_id == public user's user_id --}}
+                            {{-- then they are friends --}}
+                                            
+                            <form method="POST" action="/friends/createrequest">
+                    
+                                {{ csrf_field() }}                
+    
+                                <input type="hidden" id="name" name="name" value="{{ $publicUser }}">
+                                <button type="submit" class="btn btn-primary mb-2">Send Friend Request</button>
+                        
+                                @include ("errors/fielderrors", ["fieldName" => "name"])
+                                @include ("flash-messages/success", ["successVar" => "requestSuccess"])
+                        
+                            </form>
+                    
+                        </div>                           
+                    </div>                                  
+                </div>                 
 
-                        <div class='row justify-content-center mb-3'>
-                            <div class='col-md'>
-                                <div class='card shadow-sm bg-white rounded'>
-                                    @if ($userId == Auth::user()->id)
-                                        <h4 class='card-header'>{{ __('Your Reviewed Movies') }}</h4>
-                                    @else 
-                                        <h4 class='card-header'>{{ \App\User::find($userId)->name }}'s Reviewed Movies</h4>
-                                    @endif
-                                    <div class='card-body'>
+                <hr>
 
-                                        @if(count($reviews))
-                                        @foreach($reviews as $review)
+                <div class='container'>
 
-                                        <div class='container mb-5'>
-                                        <div class='row'>
-                                        <div class='col-3'>
-                                                <img src='http://image.tmdb.org/t/p/w200{{$review->img_path}}'>
-                                        </div>
+                    <div class='row justify-content-center mb-3'>
+                        <div class='col-md'>
+                            <div class='card shadow-sm bg-white rounded'>
+                                @if ($userId == Auth::user()->id)
+                                    <h4 class='card-header'>{{ __('Your Reviewed Movies') }}</h4>
+                                @else 
+                                    <h4 class='card-header'>{{ \App\User::find($userId)->name }}'s Reviewed Movies</h4>
+                                @endif
+                                <div class='card-body'>
 
-                                        <div class='col-9'>
-                                        <table class='table table-bordered'>
-                                            <thead>
-                                            <tr>
-                                                <th scope='col' style='width: 13%'>Movie Title</th>
-                                                <th scope='col'>Movie Description</th>
-                                                <th scope='col' style='width: 16%'>Movie Release</th>
-                                                <th scope='col' style='width: 14%'>TMDB Score</th>
-                                            </tr>
-                                            </thead>
+                                    @if(count($reviews))
+                                    @foreach($reviews as $review)
 
-                                            <tbody>
-                                            <tr>
-                                                <td>{{$review->title}}</td>
-                                                <td>{{$review->description}}</td>
-                                                <td>{{$review->release}}</td>
-                                                <td>{{$review->tmdb_score}}</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-
-                                        <table class='table table-bordered'>
-                                            <thead>
-                                            <tr>
-                                                @if ($userId == Auth::user()->id)
-                                                    <th scope='col' style='width: 12%'>My Score</th>
-                                                    <th scope='col'>My Review</th>
-                                                @else
-                                                    <th scope='col' style='width: 12%'>{{ \App\User::find($userId)->name }}'s Score</th>
-                                                    <th scope='col'>{{ \App\User::find($userId)->name }}'s Review</th>
-                                                @endif
-                                            </tr>
-                                            </thead>
-
-                                            <tbody>
-                                            <tr>
-                                                <td>{{$review->user_score}}</td>
-                                                <td>{{$review->review}}</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                        
-                                        @if ($userId == Auth::user()->id)
-                                            <button id={{ 'recommend_button_'.$review->movie_review_id }} onclick="showRecommendForm({{ $review->movie_review_id }})" class='btn btn-primary mb-2'>Recommend to a friend</button>
-                                            <form class='form-inline' id={{ 'recommend_form_'.$review->movie_review_id }} style='display: none'>
-                                                <label class='sr-only' for='recommendee_id'>Name</label>
-                                                <select class='custom-select mb-2 mr-sm-2' id={{ 'recommendee_id_'.$review->movie_review_id }} name='recommendee_id' required>
-                                                    @foreach ($friends as $friend)
-                                                        <option value='{{ $friend->id }}'>{{ $friend->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <input value='{{ $review->movie_review_id }}' id='movie_review_id' name='movie_review_id' style='display: none'>
-
-                                                <button type='button' class='btn btn-danger mb-2' onclick="hideRecommendForm({{ $review->movie_review_id }})">Cancel</button>
-                                                <button type='button' class='btn btn-primary mb-2 ml-2' onclick="recommendMovie({{ $review->movie_review_id }})">Recommend</button>
-
-                                            </form>
-                                            <div id={{ 'recommend_message_'.$review->movie_review_id }}></div>
-
-                                            @include ("errors/fielderrors", ["fieldName" => "recommendee_id"])
-                                            @include ("flash-messages/success", ["successVar" => "recommendSuccess"])
-                                        @endif
-
-                                        </div>
-                                        </div>
-                                        </div>
-                                        @endforeach
-                                        @else
-                                            <h6>No reviewed movies.</h6>
-                                        @endif
+                                    <div class='container mb-5'>
+                                    <div class='row'>
+                                    <div class='col-3'>
+                                            <img src='http://image.tmdb.org/t/p/w200{{$review->img_path}}'>
                                     </div>
+
+                                    <div class='col-9'>
+                                    <table class='table table-bordered'>
+                                        <thead>
+                                        <tr>
+                                            <th scope='col' style='width: 13%'>Movie Title</th>
+                                            <th scope='col'>Movie Description</th>
+                                            <th scope='col' style='width: 16%'>Movie Release</th>
+                                            <th scope='col' style='width: 14%'>TMDB Score</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <tr>
+                                            <td>{{$review->title}}</td>
+                                            <td>{{$review->description}}</td>
+                                            <td>{{$review->release}}</td>
+                                            <td>{{$review->tmdb_score}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class='table table-bordered'>
+                                        <thead>
+                                        <tr>
+                                            @if ($userId == Auth::user()->id)
+                                                <th scope='col' style='width: 12%'>My Score</th>
+                                                <th scope='col'>My Review</th>
+                                            @else
+                                                <th scope='col' style='width: 12%'>{{ \App\User::find($userId)->name }}'s Score</th>
+                                                <th scope='col'>{{ \App\User::find($userId)->name }}'s Review</th>
+                                            @endif
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <tr>
+                                            <td>{{$review->user_score}}</td>
+                                            <td>{{$review->review}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    
+                                    @if ($userId == Auth::user()->id)
+                                        <button id={{ 'recommend_button_'.$review->movie_review_id }} onclick="showRecommendForm({{ $review->movie_review_id }})" class='btn btn-primary mb-2'>Recommend to a friend</button>
+                                        <form class='form-inline' id={{ 'recommend_form_'.$review->movie_review_id }} style='display: none'>
+                                            <label class='sr-only' for='recommendee_id'>Name</label>
+                                            <select class='custom-select mb-2 mr-sm-2' id={{ 'recommendee_id_'.$review->movie_review_id }} name='recommendee_id' required>
+                                                @foreach ($friends as $friend)
+                                                    <option value='{{ $friend->id }}'>{{ $friend->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <input value='{{ $review->movie_review_id }}' id='movie_review_id' name='movie_review_id' style='display: none'>
+
+                                            <button type='button' class='btn btn-danger mb-2' onclick="hideRecommendForm({{ $review->movie_review_id }})">Cancel</button>
+                                            <button type='button' class='btn btn-primary mb-2 ml-2' onclick="recommendMovie({{ $review->movie_review_id }})">Recommend</button>
+
+                                        </form>
+                                        <div id={{ 'recommend_message_'.$review->movie_review_id }}></div>
+
+                                        @include ("errors/fielderrors", ["fieldName" => "recommendee_id"])
+                                        @include ("flash-messages/success", ["successVar" => "recommendSuccess"])
+                                    @endif
+
+                                    </div>
+                                    </div>
+                                    </div>
+                                    @endforeach
+                                    @else
+                                        <h6>No reviewed movies.</h6>
+                                    @endif
                                 </div>
                             </div>
                         </div>
-
-                        {{-- if the user has no reviews and no recommends, display hint --}}
-                        <div class='row justify-content-center mt-4'>
-                            <div class='col-md'>
-                                @if(count($reviews) == 0 && count($recommends) == 0)
-                                    <h3>This user has no reviews.</h3>
-                                    {{-- @if($friends->id) --}}
-                                    {{--     <h3>Recommend your friend some movies. 😊</h3> --}}
-                                    {{-- @else --}}
-                                    {{--     <h3>Add them as a friend to recommend them movies. 😊</h3> --}}
-                                    {{-- @endif --}}
-                                @endif
-                            </div>
-                        </div>
-
                     </div>
 
-
-                @else
-                    <h1>Welcome to MyMovieList!</h1>
-                    <h2>Please register or login!</h2>
-                    <div class="container">
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
-
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-                        
-                        <div class="form-group row">
-                            <label for="name" class="col-sm-4 col-form-label text-md-right">{{ __('E-Mail Address or Username') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control{{ $errors->has('email') || $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus>
-
-                                @if ($errors->has('name'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
-
-                                @if ($errors->has('email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                    {{-- if the user has no reviews and no recommends, display hint --}}
+                    <div class='row justify-content-center mt-4'>
+                        <div class='col-md'>
+                            @if(count($reviews) == 0 && count($recommends) == 0)
+                                <h3>This user has no reviews.</h3>
+                                {{-- @if($friends->id) --}}
+                                {{--     <h3>Recommend your friend some movies. 😊</h3> --}}
+                                {{-- @else --}}
+                                {{--     <h3>Add them as a friend to recommend them movies. 😊</h3> --}}
+                                {{-- @endif --}}
+                            @endif
                         </div>
-
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-
-                                @if ($errors->has('password'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
-                                </button>
-
-                                <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    {{ __('Forgot Your Password?') }}
-                                </a>
-                                <a class="btn btn-link" href="{{ route('register') }}">
-                                    {{ __('Register') }}
-                                </a>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+            @endauth
         </div>
-    </div>
-</div>
-                @endauth
-            </div>
-        @endif
     </div>
 
 

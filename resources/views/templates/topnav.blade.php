@@ -18,11 +18,11 @@
 
     {{-- general links --}}  
       <ul class="navbar-nav mx-auto">
-        <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
-        <li class="nav-item"><a class="nav-link" href="/friends">Friends</a></li>
-        <li class="nav-item"><a class="nav-link" href="/discussion">Discussions</a></li>
-        <li class="nav-item"><a class="nav-link" href="https://github.com/FresnoState-CSCI152/MyMovieList">GitHub</a></li>
-        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="/search"><ion-icon name="search"></ion-icon> Search</a></li>
+        <li class="nav-item"><a class="nav-link" href="/friends"><ion-icon name="people"></ion-icon> Friends</a></li>
+        <li class="nav-item"><a class="nav-link" href="/discussion"><ion-icon name="chatboxes"></ion-icon> Discussions</a></li>
+        <li class="nav-item"><a class="nav-link" href="https://github.com/FresnoState-CSCI152/MyMovieList"><ion-icon name="logo-github"></ion-icon> GitHub</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about"><ion-icon name="information-circle-outline"></ion-icon> About</a></li>
       </ul>     
     
 
@@ -34,13 +34,13 @@
         <div class="dropdown-menu shadow">
 
         {{-- User profile --}}
-          <a class="dropdown-item" href="{{ url('/profile') }}">Profile</a>
+          <a class="dropdown-item" href="{{ url('/profile') }}"><ion-icon name="person"></ion-icon> Profile</a>
 
         {{-- Logout --}}
           <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
             {{ csrf_field() }}
           </form>
-          <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> Logout</a> 
+          <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><ion-icon name="log-out"></ion-icon> Logout</a> 
         
         </div>
       </li>
@@ -49,10 +49,10 @@
     {{-- if user is not logged in, these are available --}}
     @else
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-      <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
-      <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
-      <li class="nav-item"><a class="nav-link" href="https://github.com/FresnoStateCSCI150/MyMovieList">GitHub</a></li>
+      <li class="nav-item"><a class="nav-link" href="/login"><ion-icon name="log-in"></ion-icon> Login</a></li>
+      <li class="nav-item"><a class="nav-link" href="/register"><ion-icon name="clipboard"></ion-icon> Register</a></li>
+      <li class="nav-item"><a class="nav-link" href="/about"><ion-icon name="information-circle-outline"></ion-icon> About</a></li>
+      <li class="nav-item"><a class="nav-link" href="https://github.com/FresnoStateCSCI150/MyMovieList"><ion-icon name="logo-github"></ion-icon> GitHub</a></li>
     </ul>
     @endif
   </div>
