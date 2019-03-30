@@ -11,13 +11,14 @@
                 @if(count($reviews))
                 @foreach($reviews as $review)
 
-                <div class='container mb-5'>
+                <div class='container-fluid mb-5'>
                 <div class='row'>
-                <div class='col-3'>
-                        <img src='http://image.tmdb.org/t/p/w200{{$review->img_path}}'>
+                <div class='col-3 pb-4'>
+                        <img class='img-fluid shadow' src='http://image.tmdb.org/t/p/w200{{$review->img_path}}'>
                 </div>
 
                 <div class='col-9'>
+                <div class="table-responsive">
                 <table class='table table-bordered'>
                     <thead>
                     <tr>
@@ -37,7 +38,9 @@
                     </tr>
                     </tbody>
                 </table>
+                </div>
 
+                <div class="table-responsive">
                 <table class='table table-bordered'>
                     <thead>
                     <tr>
@@ -58,6 +61,7 @@
                     </tr>
                     </tbody>
                 </table>
+                </div>
 
                 {{-- User Reviews Default --}}
                 @if ($userId == Auth::user()->id)

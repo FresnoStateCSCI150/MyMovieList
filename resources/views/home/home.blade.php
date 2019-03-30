@@ -6,27 +6,34 @@
         @if (Route::has('login'))
             <div class='top-right links'>
                 @auth
-                    @if ($userId == Auth::user()->id)
-                        <h1>Welcome, {{ Auth::user()->name }}!</h1>
-                    @else
-                        <h1>Welcome to {{ \App\User::find($userId)->name }}'s movie reviews</h1>
-                    @endif
-                    <hr>
+                <div class='container'>
+                    <div class='row justify-content-between mb-3'>
+                        <div class='col-10'>
+                            @if ($userId == Auth::user()->id)
+                                <h1>Welcome, {{ Auth::user()->name }}!</h1>
+                            @else
+                                <h1>Welcome to {{ \App\User::find($userId)->name }}'s movie reviews</h1>
+                            @endif
+                        </div>                           
+                    </div>                                  
+                </div>
 
-                    <div class='container'>
-                        @include('home/reviews')
-                        @include('home/recommends')
+                <hr>
 
-                        {{-- if the user has no reviews and no recommends, display hint --}}
-                        <div class='row justify-content-center mt-4'>
-                            <div class='col-md'>
-                                @if(count($reviews) == 0 && count($recommends) == 0)
-                                    <h3>Get started by <a href ="/search">searching</a> for a movie and writing a review! 😃</h3>
-                                @endif
-                            </div>
+                <div class='container'>
+                    @include('home/reviews')
+                    @include('home/recommends')
+
+                    {{-- if the user has no reviews and no recommends, display hint --}}
+                    <div class='row justify-content-center mt-4'>
+                        <div class='col-md'>
+                            @if(count($reviews) == 0 && count($recommends) == 0)
+                                <h3>Get started by <a href ="/search">searching</a> for a movie and writing a review! 😃</h3>
+                            @endif
                         </div>
-
                     </div>
+
+                </div>
 
 
                 @else
