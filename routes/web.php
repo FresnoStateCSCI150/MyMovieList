@@ -23,6 +23,7 @@ Route::get('search', 'PageController@search');
 Route::post('TMBD', 'PageController@getTMDBjson');
 Route::post('TMBDdat', 'PageController@saveMovieData');
 Route::post('MovieReview', 'PageController@saveMovieReview');
+Route::post('EditReview', 'PageController@updateReview');
 
 // Login and Register
 Auth::routes();

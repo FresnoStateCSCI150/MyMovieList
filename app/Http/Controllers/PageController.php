@@ -9,6 +9,7 @@ use App\Movie_Review;
 use Validator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
+
 class PageController extends Controller
 {
 	public function home()
@@ -16,23 +17,23 @@ class PageController extends Controller
 		if (Auth::check())
 		{
             list($reviews, $recommends) = $this->userReviews(Auth::user()->id);
-            return view('home', ['reviews' => $reviews,
-                                 'recommends' => $recommends,
-                                 'userId' => Auth::user()->id,
-                                 'friends' => Auth::user()->friends()->get(),]);
+            return view('home/home', ['reviews' => $reviews,
+                                      'recommends' => $recommends,
+                                      'userId' => Auth::user()->id,
+                                      'friends' => Auth::user()->friends()->get(),]);
 		}
 		else
-			return view('home');
+			return view('home/home');
     }
     public function friendsMovies($friendId)
     {
         $friend = \App\User::find($friendId);
         if (Gate::allows("go-to-user-reviews", $friendId)) {
             list($reviews, $recommends) = $this->userReviews($friendId);
-            return view('home', ['reviews' => $reviews,
-                                 'recommends' => $recommends,
-                                 'userId' => $friendId,
-                                 'friends' => $friend->friends()->get(),]);
+            return view('home/home', ['reviews' => $reviews,
+                                      'recommends' => $recommends,
+                                      'userId' => $friendId,
+                                      'friends' => $friend->friends()->get(),]);
         }
         else {
             return view("errors/unauthorized");
@@ -72,29 +73,44 @@ class PageController extends Controller
     private function userReviews($userId)
     {
         $reviews = DB::table('movie_reviews')
-        ->join('movie_data','movie_data.tmdb_id','=','movie_reviews.tmdb_id')
-        ->select('movie_reviews.id as movie_review_id', 'movie_reviews.review','movie_reviews.user_score', 'movie_data.tmdb_score','movie_data.title','movie_data.img_path', 'movie_data.release', 'movie_data.description')
-        ->where('movie_reviews.user_id', $userId)->orderBy('movie_reviews.user_score', 'DESC')->get();
+            ->join('movie_data','movie_data.tmdb_id','=','movie_reviews.tmdb_id')
+            ->select(
+                'movie_reviews.id as movie_review_id',
+                'movie_reviews.user_id as reviewer_id',
+                'movie_reviews.user_score',
+                'movie_reviews.review',
+                'movie_data.tmdb_score',
+                'movie_data.title',
+                'movie_data.img_path',
+                'movie_data.release',
+                'movie_data.description'
+            )
+            ->where('movie_reviews.user_id', $userId)
+            ->orderBy('movie_reviews.user_score', 'DESC')
+            ->get();
         $recommends = DB::table('movie_reviews')
             ->join('movie_data','movie_data.tmdb_id','=','movie_reviews.tmdb_id')
             ->join('recommends', 'recommends.movie_review_id', '=', 'movie_reviews.id')
-            ->select('movie_reviews.id as movie_review_id',
-                     'movie_reviews.review',
-                     'movie_reviews.user_score',
-                     'movie_reviews.tmdb_id',
-                     'movie_data.tmdb_score',
-                     'movie_data.title',
-                     'movie_data.img_path',
-                     'movie_data.release',
-                     'movie_data.description',
-                     'recommends.recommender_id',
-                     'recommends.created_at',
-                 	'recommends.id as r_id')
+            ->select(
+                'movie_reviews.id as movie_review_id',
+                'movie_reviews.user_id as reviewer_id',
+                'movie_reviews.user_score',
+                'movie_reviews.review',
+                'movie_reviews.tmdb_id',
+                'movie_data.tmdb_score',
+                'movie_data.title',
+                'movie_data.img_path',
+                'movie_data.release',
+                'movie_data.description',
+                'recommends.created_at',
+                'recommends.id as r_id'
+            )
             ->orderBy('recommends.created_at', 'DESC')
             ->where('recommends.recommendee_id', $userId)
             ->get();
             return [$reviews, $recommends];
     }
+
     public function recommendMovie(Request $request)
     {
 		$movieReviewId = request('movie_review_id');
@@ -146,6 +162,22 @@ class PageController extends Controller
             'success' => true,
         ]);
     }
+
+    //Update Review
+    public function updateReview(Request $request){
+    	$id = request('id');
+    	$user_score = request('user_score');
+    	$user_review = request('user_review');
+
+    	$update = DB::update('update movie_reviews set user_score = ? , review = ? where id = ? ',[$user_score, $user_review, $id]);
+
+    	return response()->json([
+            'success' => $update
+        ]);
+
+    }
+
+    //Page returns
 	public function about()
 	{
 		return view('about');
