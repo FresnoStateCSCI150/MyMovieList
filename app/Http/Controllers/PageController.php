@@ -16,10 +16,12 @@ class PageController extends Controller
 	{
 		if (Auth::check())
 		{
-            list($reviews, $recommends) = $this->userReviews(Auth::user()->id);
+            $userId = Auth::user()->id;
+            $reviews = $this->userReviews($userId);
+            $recommends = $this->userRecommends($userId);
             return view('home/home', ['reviews' => $reviews,
                                       'recommends' => $recommends,
-                                      'userId' => Auth::user()->id,
+                                      'userId' => $userId,
                                       'friends' => Auth::user()->friends()->get(),]);
 		}
 		else
@@ -29,7 +31,8 @@ class PageController extends Controller
     {
         $friend = \App\User::find($friendId);
         if (Gate::allows("go-to-user-reviews", $friendId)) {
-            list($reviews, $recommends) = $this->userReviews($friendId);
+            $reviews = $this->userReviews($friendId);
+            $recommends = $this->userRecommends($friendId);
             return view('home/home', ['reviews' => $reviews,
                                       'recommends' => $recommends,
                                       'userId' => $friendId,
@@ -44,7 +47,7 @@ class PageController extends Controller
     {
         $public = \App\User::find($publicId);
 
-        list($reviews, $recommends) = $this->userReviews($publicId);
+        $reviews = $this->userReviews($publicId);
 
         /*
         depending on if the user chooses to view their own profile,
@@ -61,10 +64,9 @@ class PageController extends Controller
         }
 
         // otherwise, return public profile view of other user
-        else 
+        else
         {
             return view('public', ['reviews' => $reviews,
-                                   'recommends' => $recommends,
                                    'userId' => $publicId,
                                    'friends' => $public->friends()->get(),]);
         }
@@ -88,7 +90,12 @@ class PageController extends Controller
             ->where('movie_reviews.user_id', $userId)
             ->orderBy('movie_reviews.user_score', 'DESC')
             ->get();
-        $recommends = DB::table('movie_reviews')
+            return $reviews;
+    }
+
+    private function userRecommends($userId)
+    {
+        return DB::table('movie_reviews')
             ->join('movie_data','movie_data.tmdb_id','=','movie_reviews.tmdb_id')
             ->join('recommends', 'recommends.movie_review_id', '=', 'movie_reviews.id')
             ->select(
@@ -108,7 +115,6 @@ class PageController extends Controller
             ->orderBy('recommends.created_at', 'DESC')
             ->where('recommends.recommendee_id', $userId)
             ->get();
-            return [$reviews, $recommends];
     }
 
     public function recommendMovie(Request $request)
