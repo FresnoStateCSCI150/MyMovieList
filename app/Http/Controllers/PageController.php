@@ -39,6 +39,37 @@ class PageController extends Controller
             return view("errors/unauthorized");
         }
     }
+
+    public function publicProfile($publicId)
+    {
+        $public = \App\User::find($publicId);
+
+        list($reviews, $recommends) = $this->userReviews($publicId);
+
+        /*
+        depending on if the user chooses to view their own profile,
+        it will return their own full home profile,
+        otherwise it will return the limited public profile
+        */
+
+        // if user is not logged in,
+        // or if public profile doesn't exist,
+        // or if public id matches current user's id, redirect home
+        if (!isset(Auth::user()->id) or !isset($public) or $publicId == Auth::user()->id)
+        {
+            return redirect('home');
+        }
+
+        // otherwise, return public profile view of other user
+        else 
+        {
+            return view('public', ['reviews' => $reviews,
+                                   'recommends' => $recommends,
+                                   'userId' => $publicId,
+                                   'friends' => $public->friends()->get(),]);
+        }
+    }
+
     private function userReviews($userId)
     {
         $reviews = DB::table('movie_reviews')

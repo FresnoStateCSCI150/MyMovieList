@@ -2,12 +2,12 @@
 
 @section ('content')
 
-<main class = "py-4">
+<main>
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-md-8">
 				<div class="card shadow-sm bg-white rounded">
-					<div class="card-header">{{ __('Search') }}</div>
+					<div class="card-header"><h1>{{ __('Search') }}</h1></div>
 
 					<div class="card-body">
 						<div class="form-group row">
