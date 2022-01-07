@@ -10,7 +10,7 @@
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.2",
         "intervention/image": "dev-master",
-        "laravel/framework": "5.7.*",
+        "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
         "sendgrid/sendgrid": "~7"
     },
